@@ -670,12 +670,20 @@
         }
 
         // 2. 异步从 jsDelivr CDN 拉取最新字典，静默更新缓存
-        fetchRemoteDict(cached);
+        try {
+            fetchRemoteDict(cached);
+        } catch(e) {
+            log('CDN 热更新跳过: ' + e.message);
+        }
 
         return cached;
     }
 
     function fetchRemoteDict(cached) {
+        if (typeof GM_xmlhttpRequest === 'undefined') {
+            log('GM_xmlhttpRequest 不可用，跳过 CDN 热更新');
+            return;
+        }
         GM_xmlhttpRequest({
             method: 'GET',
             url: CDN_DICT_URL,
@@ -1120,6 +1128,8 @@
             var labelsDict = DICT.labels || {};
             contents.forEach(function(el) {
                 if (el.dataset.f95SpoilerTranslated) return;
+                // 跳过含子元素的富文本 Spoiler（如 Developer Notes），仅处理纯文本标签（如 Genre）
+                if (el.children.length > 0) return;
                 var text = el.textContent.trim();
                 if (!text) return;
                 var parts = text.split(/\s*[,，]\s*/);
