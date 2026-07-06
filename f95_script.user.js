@@ -11,6 +11,7 @@
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @connect      cdn.jsdelivr.net
+// @license      GPL-3.0
 // ==/UserScript==
 
 (function() {
