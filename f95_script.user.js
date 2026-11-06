@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         F95zone 汉化
 // @namespace    https://github.com/f95zone-zh-cn
-// @version      0.3.18
+// @version      0.3.19
 // @description  F95zone 定向翻译脚本 — 双引擎架构：XenForo SSR 增量选择器定位 + SAM DOM 增量翻译
 // @author       f95zone-zh-cn
 // @match        *://f95zone.to/*
@@ -327,7 +327,7 @@
 
     // ==================== 内置默认字典 ====================
     var DEFAULT_DICT = {
-        "version": 48,
+        "version": 49,
         "xenforo": {
             ".notice[data-notice-id=\"90\"] .notice-content": "我们始终尽力确保F95上共享的文件是安全的。所有附件都会经过扫描，上传者会使用至少1款（通常2款）杀毒软件扫描每个上传文件，我们也有多道程序来防止恶意软件被分享。然而，不幸的是我们有时仍会有所遗漏。最近修改版的 <em>Pervert Action: Timelapse</em> 和 <em>Milfania</em> 含有恶意软件。<a href=\"https://f95zone.to/threads/recent-malware-infected-games.207437/\">点击此处了解更多</a>。",
             ".notice[data-notice-id=\"116\"] .notice-content": "上传者申请现已开放！如果您有兴趣成为团队成员，<a href=\"https://f95zone.to/threads/uploader-applications-are-open.230363/\">点击此处了解更多</a>。如果您之前被拒绝或因不活跃而被移除，请随时重新申请。",
@@ -382,7 +382,32 @@
             ".f95tt-promote-desc": "提升到“最新更新”的顶部。",
             ".f95tt-none": "没有匹配的工具。",
             ".f95tr-widgetHead a:not(.f95tr-seeAll)": "时下热门",
-            ".f95tr-seeAll": "查看全部"
+            ".f95tr-seeAll": "查看全部",
+            "[data-nav-id=\"defaultNewsFeed\"] span": "你的动态",
+            "[data-nav-id=\"defaultLatestActivity\"] span": "最新动态",
+            "[data-nav-id=\"searchConversations\"] span": "搜索私信",
+            "[data-nav-id=\"defaultYourProfile\"] span": "你的主页",
+            "[data-nav-id=\"defaultYourAccount\"] span": "你的账户",
+            "[data-nav-id=\"defaultLogOut\"] span": "退出登录",
+            ".p-navgroup-link--whatsnew .p-navgroup-linkText": "新内容",
+            ".block-minorHeader--similarContents": "相似主题帖",
+            ".f95rv-head-title": "评测",
+            ".f95rv-helpful-ask": "有帮助吗？",
+            ".f95rv-actions a": "举报",
+            "html[data-template=\"f95ac_overview\"] .p-title-value": "你的账户",
+            "html[data-template=\"f95ac_alerts\"] .p-title-value": "提醒",
+            "html[data-template=\"f95sr_tags\"] .p-title-value": "搜索标签",
+            "html[data-template=\"member_notable\"] .p-title-value": "知名会员",
+            "html[data-template=\"f95sr_search_form\"] .p-title-value": "搜索",
+            "html[data-template=\"help_index\"] .p-title-value": "帮助",
+            "html[data-template=\"whats_new_posts\"] .p-title-value": "新帖",
+            "html[data-template=\"f95wg_watched\"] .p-title-value": "关注的游戏与书签",
+            "html[data-template=\"account_alerts\"] .p-title-value": "提醒",
+            "html[data-template=\"conversation_list\"] .p-title-value": "私信",
+            "html[data-template=\"account_preferences\"] .p-title-value": "偏好设置",
+            "html[data-template=\"account_privacy\"] .p-title-value": "隐私",
+            "html[data-template=\"account_security\"] .p-title-value": "登录与安全",
+            "html[data-template=\"nf_tickets_member_view\"] .p-title-value": "你的工单"
         },
         "xenforo_time_phrases": {
             "_note": "覆盖 XF.phrases 时间格式化模板，使 XenForo 原生渲染中文相对时间。{count}/{minutes}/{date}/{time}/{day} 是 XenForo 的模板占位符，必须保留。",
@@ -488,7 +513,14 @@
             "Planned Features": "计划中的功能",
             "Completed Features": "已完成的功能",
             "Rejected Features": "已拒绝的功能",
-            "Site Problems": "网站问题"
+            "Site Problems": "网站问题",
+            "Completed Comic/Anim Requests": "已完成的漫画/动画请求",
+            "Rejected Comic/Anim Requests": "已拒绝的漫画/动画请求",
+            "Completed Recruitment & Services": "已完成的招募与服务",
+            "Translation Requests": "翻译请求",
+            "Cracking Requests": "破解请求",
+            "Solved General Troubleshooting": "已解决的综合故障排除",
+            "Solved Site Problems": "已解决的网站问题"
         },
         "xenforo_node_descriptions": {
             "_note": "论坛板块描述翻译。key 为 .node-description / .p-description 的 textContent 唯一前缀标识，value 为翻译后的完整 HTML。匹配方式：textContent 是否以 key 开头。",
@@ -517,7 +549,17 @@
             "ignore forum": "忽略版块",
             "ignore thread": "忽略主题帖",
             "jump to new": "跳转到新帖",
-            "filter": "筛选"
+            "filter": "筛选",
+            "ignore category": "忽略分类",
+            "watch thread": "关注主题帖",
+            "write a review": "撰写评测",
+            "post review": "发布评测",
+            "post reply": "发布回复",
+            "attach files": "附加文件",
+            "mark all read": "全部标为已读",
+            "save": "保存",
+            "see all": "查看全部",
+            "see more": "查看更多"
         },
         "xenforo_regex": [
             {
@@ -554,13 +596,460 @@
                 "selector": ".tabs--standalone .tabs-tab",
                 "pattern": "^Reviews \\((\\d+)\\)$",
                 "replacement": "评论 ($1)"
+            },
+            {
+                "selector": ".f95on-total .f95on-big",
+                "pattern": "^([\\d,]+)$",
+                "replacement": "$1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-sideMinor",
+                "pattern": "^([\\d,]+)\\s+replying\\s*·\\s*([\\d.,]+[KMB]?)\\s+views$",
+                "replacement": "$1 人回复 · $2 次浏览",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-sideMinor",
+                "pattern": "^([\\d,]+)\\s+downloads$",
+                "replacement": "$1 次下载",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-sideMinor",
+                "pattern": "^·\\s*([\\d,]+)\\s+reviews?\\s*·\\s*([\\d,]+)\\s+views this week\\s*·\\s*([\\d.]+)%\\s+gave 4 or 5$",
+                "replacement": "· $1 条评测 · 本周 $2 次浏览 · $3% 给出 4 或 5 分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-sideMinor",
+                "pattern": "^·\\s*([\\d,]+)\\s+reviews?$",
+                "replacement": "· $1 条评测",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-rate",
+                "pattern": "^·\\s*([\\d,]+)\\s+reviews?$",
+                "replacement": "· $1 条评测",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-newRev",
+                "pattern": "^\\+(\\d+) new, average ([\\d.]+)$",
+                "replacement": "+$1 条新评测，平均 $2",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-was",
+                "pattern": "^was #(\\d+)$",
+                "replacement": "原第 $1 名",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-placeIn",
+                "pattern": "^#(\\d+) this week$",
+                "replacement": "本周第 $1 名",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-moverMore",
+                "pattern": "^and (\\d+) more$",
+                "replacement": "以及另外 $1 个",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-dropped",
+                "pattern": "^\\(was #(\\d+)\\)\\s*,?$",
+                "replacement": "（原第 $1 名）",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs\\s+(.+)$",
+                "replacement": "对比 $1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-banner-count",
+                "pattern": "^([\\d,]+)\\s+ratings? · a score shows from (\\d+) ratings?$",
+                "replacement": "$1 条评分 · 评分在满 $2 条后显示",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-banner-count",
+                "pattern": "^([\\d,]+)\\s+ratings?$",
+                "replacement": "$1 条评分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-listScore-count",
+                "pattern": "^([\\d,]+)\\s+ratings?$",
+                "replacement": "$1 条评分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-listScore-count",
+                "pattern": "^([\\d,]+)\\s+reviews?$",
+                "replacement": "$1 条评测",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-record",
+                "pattern": "^([\\d,]+)\\s+reviews? · gives ([\\d.]+)★ on average$",
+                "replacement": "$1 条评测 · 平均 $2★",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-highlight-helpful",
+                "pattern": "^(\\d+) found it helpful$",
+                "replacement": "$1 人觉得有帮助",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-fewNote strong",
+                "pattern": "^(\\d+) ratings so far\\.$",
+                "replacement": "目前有 $1 条评分。",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-sortBar-count",
+                "pattern": "^(\\d+)–(\\d+) of (\\d+)$",
+                "replacement": "第 $1–$2 条，共 $3 条",
+                "repeat": true
+            },
+            {
+                "selector": ".reactionsBar-link",
+                "pattern": "^\\s*and (\\d+) others\\s*$",
+                "replacement": "等 $1 人",
+                "repeat": true
+            },
+            {
+                "selector": ".u-srOnly",
+                "pattern": "^Reactions:$",
+                "replacement": "反应："
+            },
+            {
+                "selector": ".overlay-title",
+                "pattern": "^Members who reacted to message #(\\d+)$",
+                "replacement": "对第 $1 条消息做出反应的用户"
+            },
+            {
+                "selector": ".overlay-title",
+                "pattern": "^Review (.+)$",
+                "replacement": "评测 $1"
+            },
+            {
+                "selector": ".messageNotice",
+                "pattern": "^This content has been reported (\\d+) times?\\.$",
+                "replacement": "此内容已被举报 $1 次。"
+            },
+            {
+                "selector": ".f95lu-heroRecent",
+                "pattern": "^([\\d,]+) updated in the last 24 hours$",
+                "replacement": "过去 24 小时更新了 $1 款",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-countLine",
+                "pattern": "^([\\d,]+) games$",
+                "replacement": "$1 款游戏",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-countLine",
+                "pattern": "^([\\d,]+) comics$",
+                "replacement": "$1 部漫画",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-countLine",
+                "pattern": "^([\\d,]+) animations$",
+                "replacement": "$1 部动画",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-countLine",
+                "pattern": "^([\\d,]+) assets$",
+                "replacement": "$1 个素材",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-countLine",
+                "pattern": "^([\\d,]+) mods$",
+                "replacement": "$1 个模组",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-when",
+                "pattern": "^(\\d+)m ago$",
+                "replacement": "$1 分钟前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-when",
+                "pattern": "^(\\d+)h ago$",
+                "replacement": "$1 小时前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-when",
+                "pattern": "^(\\d+)d ago$",
+                "replacement": "$1 天前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-when",
+                "pattern": "^(\\d+)mo ago$",
+                "replacement": "$1 个月前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-when",
+                "pattern": "^just now$",
+                "replacement": "刚刚",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-sideTitle",
+                "pattern": "^Your ignored tags \\((\\d+)\\)$",
+                "replacement": "你忽略的标签（$1）"
+            },
+            {
+                "selector": ".f95tp-muted",
+                "pattern": "^of ([\\d,]+) possible$",
+                "replacement": "共 $1 分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp-muted",
+                "pattern": "^([\\d,]+) of ([\\d,]+)$",
+                "replacement": "$1 / $2",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp",
+                "pattern": "^(\\d+) trophies? earned$",
+                "replacement": "已获得 $1 个奖杯",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp",
+                "pattern": "^(\\d[\\d,]*) points?$",
+                "replacement": "$1 分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp",
+                "pattern": "^\\+(\\d+) points?$",
+                "replacement": "+$1 分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp",
+                "pattern": "^([\\d.]+%|<0\\.1%) of members$",
+                "replacement": "占会员 $1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp",
+                "pattern": "^(\\d+) of ([\\d,]+)$",
+                "replacement": "$1 / $2",
+                "repeat": true
+            },
+            {
+                "selector": ".f95pf-wallWrite",
+                "pattern": "^Write something on (.+)'s profile…$",
+                "replacement": "在 $1 的个人主页上留言…",
+                "repeat": true
+            },
+            {
+                "selector": ".f95pf-more",
+                "pattern": "^\\.\\.\\. and (\\d+) more\\.$",
+                "replacement": "…以及另外 $1 人。",
+                "repeat": true
+            },
+            {
+                "selector": ".f95pf-points",
+                "pattern": "^(\\d+) points$",
+                "replacement": "$1 分",
+                "repeat": true
+            },
+            {
+                "selector": ".f95ac",
+                "pattern": "^Style: (.+)$",
+                "replacement": "风格：$1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95ac",
+                "pattern": "^Time zone: (.+)$",
+                "replacement": "时区：$1",
+                "repeat": true
+            },
+            {
+                "selector": ".quickFind-panel",
+                "pattern": "^Limited to (\\d+) results?$",
+                "replacement": "仅显示前 $1 条结果",
+                "repeat": true
+            },
+            {
+                "selector": ".f95pf-muted",
+                "pattern": "^(\\d[\\d,]*) points? ·$",
+                "replacement": "$1 分 ·",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tp-pinsNote",
+                "pattern": "^Pick up to (\\d+) trophies to show under your name on your posts and member card \\((\\d+) picked\\)\\. Picking another one replaces the oldest\\.$",
+                "replacement": "最多选择 $1 枚奖杯显示在你的帖子和会员卡上（已选 $2 枚）。再选一枚会替换最早选择的。",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-writeOverlay .f95rv-versionButton, .f95rv-versionButton strong, .f95rv-versionPill",
+                "pattern": "^(.+) \\(current\\)$",
+                "replacement": "$1（当前）",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-writeOverlay, .overlay",
+                "pattern": "^(\\d+) of at least (\\d+) characters$",
+                "replacement": "已输入 $1 个字符（至少 $2 个）",
+                "repeat": true
+            },
+            {
+                "selector": ".f95rv-writeOverlay .f95rv-versionButton, .f95rv-versionButton strong, .f95rv-versionPill, .overlay option",
+                "pattern": "^(.+) \\(current\\)$",
+                "replacement": "$1（当前）",
+                "repeat": true
+            },
+            {
+                "selector": ".f95lu-sideTitle, .f95lu-secTitle",
+                "pattern": "^Your ignored tags \\((\\d+)\\)$",
+                "replacement": "你忽略的标签（$1）"
+            },
+            {
+                "selector": "[class^=\"f95tp\"], [class*=\" f95tp\"]",
+                "pattern": "^(\\d+) trophies? earned$",
+                "replacement": "已获得 $1 个奖杯",
+                "repeat": true
+            },
+            {
+                "selector": "[class^=\"f95tp\"], [class*=\" f95tp\"]",
+                "pattern": "^(\\d[\\d,]*) points?$",
+                "replacement": "$1 分",
+                "repeat": true
+            },
+            {
+                "selector": "[class^=\"f95tp\"], [class*=\" f95tp\"]",
+                "pattern": "^\\+(\\d+) points?$",
+                "replacement": "+$1 分",
+                "repeat": true
+            },
+            {
+                "selector": "[class^=\"f95tp\"], [class*=\" f95tp\"]",
+                "pattern": "^([\\d.]+%|<0\\.1%) of members$",
+                "replacement": "占会员 $1",
+                "repeat": true
+            },
+            {
+                "selector": "[class^=\"f95tp\"], [class*=\" f95tp\"]",
+                "pattern": "^(\\d+) of ([\\d,]+)$",
+                "replacement": "$1 / $2",
+                "repeat": true
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trophies awarded to (.+)$",
+                "replacement": "$1 获得的奖杯"
+            },
+            {
+                "selector": ".f95ac, [class^=\"f95ac\"], [class*=\" f95ac\"]",
+                "pattern": "^Style: (.+)$",
+                "replacement": "风格：$1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95ac, [class^=\"f95ac\"], [class*=\" f95ac\"]",
+                "pattern": "^Time zone: (.+)$",
+                "replacement": "时区：$1",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs (\\d+) minutes? ago$",
+                "replacement": "对比 $1 分钟前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs (\\d+) hours? ago$",
+                "replacement": "对比 $1 小时前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs (\\d+) days? ago$",
+                "replacement": "对比 $1 天前",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs yesterday$",
+                "replacement": "对比昨天",
+                "repeat": true
+            },
+            {
+                "selector": ".f95tr-lh-vs",
+                "pattern": "^vs today$",
+                "replacement": "对比今天",
+                "repeat": true
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Games$",
+                "replacement": "时下热门：游戏"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: New games$",
+                "replacement": "时下热门：新游戏"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Mods$",
+                "replacement": "时下热门：模组"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Comics & Stills$",
+                "replacement": "时下热门：漫画与插画"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Discussions$",
+                "replacement": "时下热门：讨论"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Rising$",
+                "replacement": "时下热门：上升中"
+            },
+            {
+                "selector": ".p-title-value",
+                "pattern": "^Trending: Reviews$",
+                "replacement": "时下热门：评测"
             }
         ],
         "xenforo_placeholders": {
             "textarea.js-editor[placeholder=\"Update your status…\"]": "更新你的状态…",
             "textarea.comment-input[placeholder=\"Write a comment…\"]": "写评论…",
             "#quickSearchTitle": "快速搜索…",
-            ".f95tt-find-input": "查找工具…"
+            ".f95tt-find-input": "查找工具…",
+            ".uix_searchInput, input.js-uix_syncValue[name=\"keywords\"]": "搜索…",
+            ".quickFind-input": "搜索内容…",
+            "input.f95sr-sf-input[name=\"keywords\"]": "要查找的内容",
+            "input[name=\"c[users]\"]": "会员…",
+            ".choices__input--cloned": "可选前缀…"
         },
         "xenforo_node_stats_dt": {
             "Threads": "条主题帖",
@@ -643,7 +1132,32 @@
             "6 months": "6 个月",
             "1 year": "1 年",
             "(Any)": "（任意）",
-            "(No prefix)": "（无前缀）"
+            "(No prefix)": "（无前缀）",
+            "Featured threads": "精选主题帖",
+            "Discussion": "讨论",
+            "Poll": "投票",
+            "Optional prefix…": "可选前缀…",
+            "Collection": "合集",
+            "SiteRip": "站点搬运",
+            "VN": "视觉小说",
+            "Others": "其他",
+            "QSP": "QSP引擎",
+            "RPGM": "RPG制作大师",
+            "Unity": "Unity引擎",
+            "HTML": "HTML引擎",
+            "RAGS": "RAGS引擎",
+            "Java": "Java引擎",
+            "Ren'Py": "Ren'Py引擎",
+            "Flash": "Flash引擎",
+            "ADRIFT": "ADRIFT引擎",
+            "Tads": "Tads引擎",
+            "Wolf RPG": "Wolf RPG引擎",
+            "Unreal Engine": "虚幻引擎",
+            "WebGL": "WebGL引擎",
+            "Godot": "Godot引擎",
+            "Onhold": "暂停",
+            "Completed": "已完成",
+            "Abandoned": "已弃坑"
         },
         "sam_static": {
             ".notice-content": "由于性能问题，我们已禁用旧的 Latest Updates 页面。目前仅提供 Alpha 版本，它使用了全新的后端，性能大幅提升（同时也有新功能）。感谢您的耐心等待。",
@@ -862,7 +1376,13 @@
             "Tads": "Tads引擎",
             "RAGS": "RAGS引擎",
             "QSP": "QSP引擎",
-            "HTML": "HTML引擎"
+            "HTML": "HTML引擎",
+            "Seeking": "求资源",
+            "REQ": "请求",
+            "Tool": "工具",
+            "Fan Art": "同人图",
+            "Video": "视频",
+            "Pending": "待处理"
         },
         "xenforo_footer_links": {
             "Members": "会员",
@@ -1029,7 +1549,641 @@
                 "Other": "其他"
             },
             "download": "下载链接"
-        }
+        },
+        "xenforo_ui_text": {
+            "_note": "新版界面通用文案：仅在脚本内置的 UI 容器内逐文本节点精确匹配，不触碰帖子标题/正文/用户名。",
+            "Menu": "菜单",
+            "Profile": "个人资料",
+            "Your profile": "你的主页",
+            "Settings": "设置",
+            "Your account": "你的账户",
+            "View your profile": "查看你的主页",
+            "What's new": "新内容",
+            "Direct messages": "私信",
+            "Inbox": "收件箱",
+            "Alerts": "提醒",
+            "Log out": "退出登录",
+            "Your news feed": "你的动态",
+            "Latest activity": "最新动态",
+            "Search direct messages": "搜索私信",
+            "New posts": "新帖",
+            "New profile posts": "新的个人动态",
+            "New thread reviews": "新主题评测",
+            "Featured content": "精选内容",
+            "Post thread…": "发布主题…",
+            "Mark forums read": "将版块标为已读",
+            "Mark all read": "全部标为已读",
+            "Alert settings": "提醒设置",
+            "Select for bulk update": "选择以批量操作",
+            "Watch thread": "关注主题帖",
+            "Watch this thread…": "关注此主题帖…",
+            "and receive email notifications": "并接收邮件提醒",
+            "without receiving email notifications": "不接收邮件提醒",
+            "Featured threads": "精选主题帖",
+            "Thread type:": "主题类型：",
+            "(Any)": "（任意）",
+            "(No prefix)": "（无前缀）",
+            "Other": "其他",
+            "Collection": "合集",
+            "SiteRip": "站点搬运",
+            "VN": "视觉小说",
+            "Others": "其他",
+            "QSP": "QSP引擎",
+            "RPGM": "RPG制作大师",
+            "Unity": "Unity引擎",
+            "HTML": "HTML引擎",
+            "RAGS": "RAGS引擎",
+            "Java": "Java引擎",
+            "Ren'Py": "Ren'Py引擎",
+            "Flash": "Flash引擎",
+            "ADRIFT": "ADRIFT引擎",
+            "Tads": "Tads引擎",
+            "Wolf RPG": "Wolf RPG引擎",
+            "Unreal Engine": "虚幻引擎",
+            "WebGL": "WebGL引擎",
+            "Godot": "Godot引擎",
+            "Onhold": "暂停",
+            "Abandoned": "已弃坑",
+            "Comics": "漫画",
+            "Animations": "动画",
+            "Assets": "素材",
+            "Forum": "论坛",
+            "Select": "选择",
+            "Open": "打开",
+            "Close": "关闭",
+            "Insert quotes…": "插入引用…",
+            "Top": "顶部",
+            "Bottom": "底部",
+            "Back": "返回",
+            "Bookmarks": "书签",
+            "News feed": "动态",
+            "Your content": "你的内容",
+            "Others see when you're online": "其他人看到的在线状态",
+            "Update your status:": "更新你的状态：",
+            "Loading…": "加载中…",
+            "You have been awarded a trophy:": "你获得了奖杯：",
+            "By:": "作者：",
+            "RSS": "RSS 订阅",
+            "Activity": "动态",
+            "Reactions": "获赞",
+            "My ratings": "我的评分",
+            "You": "你",
+            "Profile and signature": "个人资料与签名",
+            "Following and ignoring": "关注与屏蔽",
+            "Preferences": "偏好设置",
+            "Privacy": "隐私",
+            "Sign-in and security": "登录与安全",
+            "Delete account": "删除账户",
+            "More": "更多",
+            "Discord Integration": "Discord 集成",
+            "Connected accounts": "关联账户",
+            "All of your account": "账户总览",
+            "Overview": "概览",
+            "Edit profile": "编辑资料",
+            "View profile": "查看资料",
+            "Account standing": "账户状态",
+            "Good standing": "状态良好",
+            "You have no active warnings. Thanks for keeping F95zone a good place.": "你没有生效中的警告。感谢你维护 F95zone 的良好环境。",
+            "No warnings since you joined.": "自加入以来没有收到任何警告。",
+            "Forum rules": "论坛规则",
+            "Unread alerts": "未读提醒",
+            "Reactions to your posts": "你帖子收到的反应",
+            "Members you follow": "你关注的会员",
+            "Your settings at a glance": "设置速览",
+            "Look and language": "外观与语言",
+            "Notifications": "通知",
+            "Reading": "阅读",
+            "Hidden prefixes": "隐藏前缀",
+            "Style": "风格",
+            "Style options": "风格选项",
+            "Collapse the sidebar by default": "默认收起侧边栏",
+            "In styles with a sidebar you can fold away.": "在带侧边栏的风格中可将其收起。",
+            "Collapse the side navigation by default": "默认收起侧边导航",
+            "In styles with a side navigation you can fold away.": "在带侧边导航的风格中可将其折叠。",
+            "Show the postbit by default": "默认显示帖子侧栏信息",
+            "In styles where the poster's details beside a post can be folded away.": "在可将发帖者信息折叠的风格中。",
+            "Language": "语言",
+            "Time zone": "时区",
+            "No changes": "无更改",
+            "Open ticket…": "提交工单…",
+            "You have not opened any tickets yet.": "你还没有提交任何工单。",
+            "Two-step login is off (not recommended)": "两步验证未开启（不建议）",
+            "Turn it on": "开启",
+            "Your profile: members": "资料可见范围：会员",
+            "Direct messages from: members": "谁可以发私信：会员",
+            "Online status shown": "显示在线状态",
+            "Change": "更改",
+            "Look and time": "外观与时间",
+            "No avatar yet": "尚未设置头像",
+            "No signature yet": "尚未设置签名",
+            "Edit": "编辑",
+            "Modder": "模组制作者",
+            "Messages": "消息",
+            "Reaction score": "获赞",
+            "Points": "积分",
+            "Ratings Received": "收到的评价",
+            "Ratings received": "收到的评价",
+            "Games watched": "关注的游戏",
+            "Joined": "加入于",
+            "Last seen": "最后浏览",
+            "· Last seen": "· 最后浏览",
+            "Followers": "关注者",
+            "About": "关于",
+            "Recent activity": "最近动态",
+            "See all": "查看全部",
+            "Badges": "徽章",
+            "All badges": "全部徽章",
+            "Profile posts": "个人动态",
+            "Postings": "帖子",
+            "Post areas": "发帖版块",
+            "posted the thread": "发布了主题帖",
+            "replied to the thread": "回复了主题帖",
+            "in": "于",
+            "Find": "查找",
+            "Report": "举报",
+            "Follow": "关注",
+            "Following": "已关注",
+            "Unfollow": "取消关注",
+            "Ignore": "忽略",
+            "Unignore": "取消忽略",
+            "Start conversation": "发起私信",
+            "New": "新",
+            "NEW": "新",
+            "Quote": "引用",
+            "Reply": "回复",
+            "Share": "分享",
+            "Share this thread": "分享本主题帖",
+            "Share this post": "分享本帖",
+            "Copy link": "复制链接",
+            "Copy to clipboard": "复制到剪贴板",
+            "Link copied to clipboard.": "链接已复制到剪贴板。",
+            "Add bookmark": "添加书签",
+            "Similar threads": "相似主题帖",
+            "Similar games in Latest Updates": "最新更新中的相似游戏",
+            "Show only:": "仅显示：",
+            "Unread": "未读",
+            "Replies": "回复",
+            "Mentions": "提及",
+            "New threads": "新主题",
+            "All": "全部",
+            "Today": "今天",
+            "Read:": "已读：",
+            "Mark read": "标为已读",
+            "Mark unread": "标为未读",
+            "Show all": "查看全部",
+            "Send direct message": "发送私信",
+            "You have no recent direct messages.": "没有最近的私信。",
+            "There are no direct messages to display.": "没有可显示的私信。",
+            "Conversation starters": "会话起始语",
+            "SPAM": "垃圾信息",
+            "Labels": "标签",
+            "Rules": "规则",
+            "Conversation groups": "会话分组",
+            "Auto response": "自动回复",
+            "Selected": "已选择",
+            "Ignore forum": "忽略版块",
+            "Ignore category": "忽略分类",
+            "Ignore thread": "忽略主题帖",
+            "Search": "搜索",
+            "Search…": "搜索…",
+            "Advanced search…": "高级搜索…",
+            "Search titles and first posts only": "仅搜索标题和首帖",
+            "Search titles only": "仅搜索标题",
+            "Look in": "查找范围",
+            "Everything": "全部",
+            "Games": "游戏",
+            "Threads": "主题帖",
+            "Tickets": "工单",
+            "Tags": "标签",
+            "Game tags": "游戏标签",
+            "Asset tags": "资源标签",
+            "Cloud": "标签云",
+            "A to Z": "A-Z",
+            "Match in": "匹配范围",
+            "Everything they say": "全部内容",
+            "Titles and first posts only": "仅标题和首帖",
+            "Titles only": "仅标题",
+            "− Fewer options": "− 更少选项",
+            "Posted by": "发帖者",
+            "You may enter multiple names here.": "可输入多个用户名。",
+            "When": "时间",
+            "Any time": "不限时间",
+            "Past week": "过去一周",
+            "Past month": "过去一个月",
+            "Past year": "过去一年",
+            "Pick dates": "选择日期",
+            "Without tags": "排除标签",
+            "Order by": "排序依据",
+            "Relevance": "相关度",
+            "Date": "日期",
+            "Clear": "清除",
+            "Saved searches": "已保存的搜索",
+            "Save a games search from its results to run it again, or to get an alert when a new game matches.": "在结果页保存游戏搜索，以便再次运行，或在新游戏匹配时收到提醒。",
+            "A tag opens the games with it, with filters. Asset tags have their own list.": "点击标签会打开带该标签的游戏（含筛选）。资源标签有独立列表。",
+            "Help": "帮助",
+            "Smilies": "表情",
+            "BB codes": "BB 代码",
+            "Trophies": "奖杯",
+            "Cookie usage": "Cookie 使用",
+            "Terms and rules": "条款和规则",
+            "Privacy policy": "隐私政策",
+            "CSAM Policy": "CSAM 政策",
+            "Transparency Report": "透明度报告",
+            "This shows a full list of the smilies you can insert when posting a message.": "这里列出你发帖时可以插入的全部表情。",
+            "The list of BB codes you can use to spice up the look of your messages. This page shows a list of all BB codes that are available.": "这里列出可用于美化帖子外观的 BB 代码，以及全部可用代码。",
+            "You can earn trophies by carrying out different actions. This page shows a list of the trophies that are available.": "完成不同操作即可获得奖杯。本页列出所有可获得的奖杯。",
+            "This page explains how this site uses cookies.": "本页说明本站如何使用 Cookie。",
+            "You must agree to these terms and rules before using the site.": "使用本站前，你必须同意这些条款和规则。",
+            "You must accept this policy before using the site.": "使用本站前，你必须接受此政策。",
+            "Notable members": "知名会员",
+            "Members": "会员",
+            "Most messages": "发帖最多",
+            "Highest reaction score": "获赞最多",
+            "Most points": "积分最高",
+            "Most media items": "媒体最多",
+            "Most albums": "相册最多",
+            "Today's birthdays": "今日生日",
+            "Staff members": "管理团队",
+            "Find member": "查找会员",
+            "Newest members": "最新会员",
+            "See more…": "查看更多…",
+            "Search Content": "搜索内容",
+            "Search Content…": "搜索内容…",
+            "Clear search": "清除搜索",
+            "Categories": "分类",
+            "↑↓ Select": "↑↓ 选择",
+            "Tab Categories": "Tab 切换分类",
+            "↵ Open": "↵ 打开",
+            "Esc Close": "Esc 关闭",
+            "New versions": "新版本",
+            "Watched games & bookmarks": "关注的游戏与书签",
+            "Watched games": "关注的游戏",
+            "Other threads": "其他主题帖",
+            "Watched forums": "关注的版块",
+            "Watched": "已关注",
+            "Bookmarked": "已收藏",
+            "Hide the ones I've seen": "隐藏我看过的",
+            "The count of new versions shows on the Watched menu.": "新版本数量会显示在“关注”菜单上。",
+            "Hide it": "隐藏",
+            "You're up to date: no new versions of the games you watch or bookmarked in the last 30 days that you haven't read yet.": "已看完：过去 30 天内你关注或收藏的游戏没有你尚未阅读的新版本。",
+            "Trending: Games": "时下热门：游戏",
+            "The threads the most people are joining in on, counted by people, not posts · updated": "按参与人数而非帖子数统计的热门主题帖 · 更新于",
+            "New games": "新游戏",
+            "Mods": "模组",
+            "Comics & Stills": "漫画与插画",
+            "Discussions": "讨论",
+            "Rising": "上升中",
+            "Reviews": "评测",
+            "Right now": "此刻",
+            "This week": "本周",
+            "This month": "本月",
+            "Sort by: Place": "排序：排名",
+            "List": "列表",
+            "Cards": "卡片",
+            "How it's ranked": "排名规则",
+            "Mark these read": "将这些人标为已读",
+            "Only unread": "仅未读",
+            "Only watched": "仅关注",
+            "Climbing": "上升中",
+            "New in the top 100": "新进入前 100",
+            "Thread": "主题帖",
+            "Last 24 hours": "最近 24 小时",
+            "Rating": "评分",
+            "Newest ›": "最新 ›",
+            "New version": "新版本",
+            "Updated": "已更新",
+            "Out": "跌出",
+            "Fell out of the top 10:": "跌出前 10 名：",
+            "Trending tags": "热门标签",
+            "Trending developers": "热门开发者",
+            "Most downloaded this week": "本周下载最多",
+            "Hidden gems": "隐藏佳作",
+            "Winners of the week": "本周优胜",
+            "Your Trending": "你的趋势",
+            "Alert me when a thread I watch gets into the top of a list": "我关注的主题帖进入榜单前列时提醒我",
+            "Save": "保存",
+            "Threads you hid": "你隐藏的主题帖",
+            "No reviews yet": "暂无评测",
+            "Many downloads": "下载量高",
+            "Lots of bookmarks": "收藏量高",
+            "Lots of replies": "回复量高",
+            "Lots of views": "浏览量高",
+            "Rising fast": "快速上升",
+            "bookmark ·": "收藏 ·",
+            "replying ·": "人回复 ·",
+            "views": "次浏览",
+            "bookmarks ·": "收藏 ·",
+            "downloads": "下载",
+            "new": "新",
+            "Latest Updates": "最新更新",
+            "Sort: Updated, newest first": "排序：最近更新优先",
+            "Show": "显示",
+            "Not seen yet": "未看过",
+            "New since my last visit": "自上次访问以来的新内容",
+            "by": "作者",
+            "Watch": "关注",
+            "Watching": "已关注",
+            "Stop ignoring": "停止忽略",
+            "Add to a list": "添加到列表",
+            "New game": "新游戏",
+            "Old page": "旧版页面",
+            "Filters": "筛选",
+            "Reset": "重置",
+            "Engine": "引擎",
+            "pick one": "选一个",
+            "Status": "状态",
+            "Completed": "已完成",
+            "Ongoing": "连载中",
+            "On hold": "暂停",
+            "Hide early builds": "隐藏早期版本",
+            "With tags": "包含标签",
+            "More tag filters": "更多标签筛选",
+            "…unless they're also tagged": "……除非它们也带有以下标签",
+            "Tag group (all of these)": "标签组（同时包含）",
+            "Each group is \"all of these\"; games matching any group show: (A and B) or (C and D).": "每组表示“同时包含”；命中任意一组即显示：（A 且 B）或（C 且 D）。",
+            "Tag families": "标签族",
+            "Hiding one tag of a family (set by staff) hides the others too.": "隐藏标签族中的一个标签（由管理团队设定）时，其他标签也会一并隐藏。",
+            "More filters": "更多筛选",
+            "Plays on": "运行平台",
+            "Web": "网页",
+            "Download host": "下载主机",
+            "Search in": "搜索范围",
+            "Released": "发布日期",
+            "From": "起始",
+            "To": "结束",
+            "From at least this many reviews": "至少有多少条评测",
+            "Status changes": "状态变更",
+            "Became Completed": "变为已完成",
+            "Became On hold": "变为暂停",
+            "Became Abandoned": "变为已弃坑",
+            "Hide games tagged": "隐藏带有以下标签的游戏",
+            "Hide games with these tags": "隐藏带有这些标签的游戏",
+            "Always show games I watch": "始终显示我关注的游戏",
+            "Apply filters": "应用筛选",
+            "Version": "版本",
+            "Trophy points": "奖杯点数",
+            "Closest to you": "接近达成",
+            "When you earn a trophy:": "获得奖杯时：",
+            "Big, in the middle": "居中大图",
+            "Small box in the corner": "角落小框",
+            "Pick up to 3 trophies to show under your name on your posts and member card (0 picked). Picking another one replaces the oldest.": "最多选择 3 枚奖杯显示在你的帖子和会员卡上（已选 0 枚）。再选一枚会替换最早选择的。",
+            "Common": "普通",
+            "Uncommon": "罕见",
+            "Rare": "稀有",
+            "Epic": "史诗",
+            "Legendary": "传说",
+            "One of a kind": "独一无二",
+            "Secret": "隐藏",
+            "Secret trophy": "隐藏奖杯",
+            "Secret trophy: how to get it shows once you have it.": "隐藏奖杯：获得后才会显示获取条件。",
+            "Show on my posts": "在我的帖子上显示",
+            "All trophies": "全部奖杯",
+            "Given by staff": "员工授予",
+            "Other trophies": "其他奖杯",
+            "Collecting": "收集",
+            "Milestones": "里程碑",
+            "Visits": "访问",
+            "Dates": "日期",
+            "Community": "社区",
+            "Around F95zone": "F95zone 周边",
+            "Likes": "点赞",
+            "Trophy unlocked": "奖杯已解锁",
+            "See my trophies": "查看我的奖杯",
+            "Esc or a click outside closes it.": "按 Esc 或点击外部即可关闭。",
+            "Show these as a small box instead": "改为小框显示",
+            "Write a review": "撰写评测",
+            "Visuals": "画面",
+            "Writing": "剧本",
+            "Gameplay": "玩法",
+            "Sound & production": "音效与制作",
+            "Erotic content": "色情内容",
+            "Rate the parts that apply, or skip them. Rate how well each is done, not whether it's your taste.": "为适用的部分评分，或直接跳过。请评价完成度，而非是否符合你的口味。",
+            "The total score": "总分",
+            "Rate parts for a suggestion, or pick it yourself.": "为各部分评分以获得建议分，或自行选择总分。",
+            "Type your review here. Please write it as detailed as you can (at least 250 characters).": "在此撰写评测，请尽量详细（至少 250 个字符）。",
+            "Read the Review Rules": "阅读评测规则",
+            "Played on (required)": "游玩平台（必填）",
+            "Played on": "游玩平台",
+            "(required)": "（必填）",
+            "Played with mods?": "是否使用模组？",
+            "(optional)": "（可选）",
+            "Win": "Windows",
+            "Android": "安卓",
+            "Played with mods? (optional)": "是否使用模组？（可选）",
+            "No": "否",
+            "Yes": "是",
+            "Home page": "主页",
+            "Rate some parts or pick the total score.": "请为部分项目评分，或直接选择总分。",
+            "Post review": "发布评测",
+            "Most helpful critical": "最有帮助的差评",
+            "Most helpful": "最有帮助",
+            "Latest": "最新",
+            "Newest": "最新发布",
+            "Oldest": "最早发布",
+            "Highest": "最高分",
+            "Lowest": "最低分",
+            "Version:": "版本：",
+            "All versions": "全部版本",
+            "No mods": "无模组",
+            "Helpful?": "有帮助吗？",
+            "Yes ·": "是 ·",
+            "No ·": "否 ·",
+            "Sort:": "排序：",
+            "The score shows from 5 ratings, so a new game isn't judged by its first few reviews.": "评分在满 5 条评测后显示，避免新游戏被最初几条评测决定命运。",
+            "Remove formatting": "清除格式",
+            "Bold": "加粗",
+            "Italic": "斜体",
+            "Font size": "字号",
+            "Text color": "文字颜色",
+            "Strike-through": "删除线",
+            "Underline": "下划线",
+            "More options": "更多选项",
+            "More options…": "更多选项…",
+            "Ordered list": "有序列表",
+            "Unordered list": "无序列表",
+            "Indent": "增加缩进",
+            "Outdent": "减少缩进",
+            "Alignment": "对齐",
+            "Align left": "左对齐",
+            "Align center": "居中对齐",
+            "Align right": "右对齐",
+            "Justify text": "两端对齐",
+            "Paragraph format": "段落格式",
+            "Normal": "正文",
+            "Heading 1": "标题 1",
+            "Heading 2": "标题 2",
+            "Heading 3": "标题 3",
+            "Insert link": "插入链接",
+            "Insert image": "插入图片",
+            "Media": "媒体",
+            "Insert table": "插入表格",
+            "Spoiler": "剧透",
+            "Code": "代码",
+            "Toggle BB code": "切换 BB 代码",
+            "Drafts": "草稿",
+            "Save draft": "保存草稿",
+            "Delete draft": "删除草稿",
+            "Preview": "预览",
+            "Inline code": "行内代码",
+            "Font family": "字体",
+            "Inline spoiler": "行内剧透",
+            "Insert horizontal line": "插入水平线",
+            "Insert video": "插入视频",
+            "Write your reply...": "写下你的回复…",
+            "Post reply": "发布回复",
+            "Attach files": "附加文件",
+            "Undo": "撤销",
+            "Redo": "重做"
+        },
+        "xenforo_ui_attrs": {
+            "_note": "通用属性翻译：仅对 title / data-original-title / aria-label / placeholder / alt 做精确匹配，用户内容容器除外。",
+            "Menu": "菜单",
+            "Toggle expanded": "展开菜单",
+            "Direct messages": "私信",
+            "Inbox": "收件箱",
+            "Alerts": "提醒",
+            "Search": "搜索",
+            "Search…": "搜索…",
+            "Search Content": "搜索内容",
+            "Search Content…": "搜索内容…",
+            "Toggle sidebar": "切换侧边栏",
+            "Sidebar": "侧边栏",
+            "Clear search": "清除搜索",
+            "Quick search": "快速搜索",
+            "Search within": "在……中搜索",
+            "Add to filters": "添加到筛选",
+            "Ignore forum": "忽略版块",
+            "Ignore category": "忽略分类",
+            "Ignore thread": "忽略主题帖",
+            "More options": "更多选项",
+            "Share": "分享",
+            "Add bookmark": "添加书签",
+            "Toggle multi-quote": "切换多引用",
+            "Reply, quoting this message": "回复并引用该消息",
+            "Optional prefix…": "可选前缀…",
+            "Only titles are searched: tags and post text don't count.": "仅搜索标题：标签和帖子正文不计入。",
+            "Tab: next category. Shift+Tab: previous. Escape: close and resume normal focus navigation.": "Tab：下一个分类。Shift+Tab：上一个。Esc：关闭并恢复正常焦点导航。",
+            "What's new": "新内容",
+            "Number of entries": "条目数量",
+            "Refresh (the lists are worked out again every few minutes)": "刷新（列表每隔几分钟重新计算）",
+            "Refresh": "刷新",
+            "Navigation position": "导航位置",
+            "Statistic": "统计",
+            "Interact": "互动",
+            "Discord URL": "Discord 链接",
+            "Show hidden content by {{names}}": "显示 {{names}} 隐藏的内容",
+            "Close": "关闭",
+            "Previous trophy": "上一枚奖杯",
+            "Next trophy": "下一枚奖杯",
+            "Watch": "关注",
+            "Watching": "已关注",
+            "Follow": "关注",
+            "Following": "已关注",
+            "Add to a list": "添加到列表",
+            "Ignore": "忽略",
+            "Version": "版本",
+            "Developer, tags and buttons": "开发者、标签与按钮",
+            "Pick this game": "选择该游戏",
+            "Click: only these · again: hide them · again: off": "点击：仅看这些 · 再次点击：隐藏 · 再点：关闭",
+            "Copy link": "复制链接",
+            "Copy to clipboard": "复制到剪贴板",
+            "Share this thread": "分享本主题帖",
+            "Share this post": "分享本帖",
+            "Link copied to clipboard.": "链接已复制到剪贴板。",
+            "Bold (Ctrl+B)": "加粗（Ctrl+B）",
+            "Italic (Ctrl+I)": "斜体（Ctrl+I）",
+            "Underline (Ctrl+U)": "下划线（Ctrl+U）",
+            "Strike-through (Ctrl+S)": "删除线（Ctrl+S）",
+            "Undo (Ctrl+Z)": "撤销（Ctrl+Z）",
+            "Redo (Ctrl+Shift+Z)": "重做（Ctrl+Shift+Z）",
+            "Insert link (Ctrl+K)": "插入链接（Ctrl+K）",
+            "Insert image (Ctrl+P)": "插入图片（Ctrl+P）",
+            "More options…": "更多选项…",
+            "Games": "游戏",
+            "Comics": "漫画",
+            "Animations": "动画",
+            "Assets": "素材",
+            "Tags": "标签",
+            "Mods": "模组",
+            "Sticky": "置顶",
+            "Redirect": "重定向",
+            "Locked": "已锁定",
+            "Poll": "投票",
+            "RSS": "RSS 订阅",
+            "Like": "点赞",
+            "Thinking Face": "思考",
+            "Heart": "爱心",
+            "Haha": "哈哈",
+            "Angry": "生气",
+            "Wow": "惊讶",
+            "Sad": "难过",
+            "Love": "喜爱"
+        },
+        "xenforo_attr_regex": [
+            {
+                "selector": ".f95rv-rateStar",
+                "attr": "title",
+                "pattern": "^Rate it (\\d)★$",
+                "replacement": "评分 $1★"
+            },
+            {
+                "selector": ".f95rv-rateStar",
+                "attr": "aria-label",
+                "pattern": "^Rate it (\\d)★$",
+                "replacement": "评分 $1★"
+            },
+            {
+                "selector": ".f95rv-stars[aria-label]",
+                "attr": "aria-label",
+                "pattern": "^([\\d.]+) stars?$",
+                "replacement": "$1 星"
+            },
+            {
+                "selector": ".structItem-cell--meta",
+                "attr": "title",
+                "pattern": "^First message reaction score: ([\\d,]+)$",
+                "replacement": "首帖获赞：$1"
+            },
+            {
+                "selector": ".f95on-trend svg[aria-label]",
+                "attr": "aria-label",
+                "pattern": "^Online over the last 24 hours: lowest ([\\d,]+), highest ([\\d,]+)$",
+                "replacement": "过去 24 小时在线：最低 $1，最高 $2"
+            },
+            {
+                "selector": "a[title^=\"Find all content by \"]",
+                "attr": "title",
+                "pattern": "^Find all content by (.+)$",
+                "replacement": "查找 $1 的所有内容"
+            },
+            {
+                "selector": "link[title^=\"RSS feed for \"]",
+                "attr": "title",
+                "pattern": "^RSS feed for (.+)$",
+                "replacement": "$1 的 RSS 订阅"
+            },
+            {
+                "selector": ".shareInput",
+                "attr": "data-success-text",
+                "pattern": "^Link copied to clipboard\\.$",
+                "replacement": "链接已复制到剪贴板。"
+            },
+            {
+                "selector": ".f95lu-when",
+                "attr": "title",
+                "pattern": "^Updated (.+)$",
+                "replacement": "更新于 $1"
+            }
+        ],
+        "xenforo_scoped_text": [
+            {
+                "_note": "显式作用域文案：用于通常属于\"用户内容\"、但个别固定提示需要翻译的容器。",
+                "selector": ".f95tp-desc",
+                "map": {
+                    "Secret trophy: how to get it shows once you have it.": "隐藏奖杯：获得后才会显示获取条件。"
+                }
+            }
+        ]
     };
 
     // ==================== 字典加载（缓存 → 内置 → CDN 三级回退） ====================
@@ -1373,8 +2527,35 @@
         return unmatched || [];
     }
 
+    /**
+     * 在元素的文本节点上逐段做正则替换，保留内部标签（<b>、<span>、<a>）。
+     * 旧实现直接改 textContent，会把 "Most at once: <b>131,778</b> on …" 这类结构压平。
+     */
+    function replaceInTextNodes(el, pattern, replacement) {
+        var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+        var nodes = [];
+        var node;
+        while ((node = walker.nextNode())) nodes.push(node);
+        var changed = false;
+        nodes.forEach(function(n) {
+            var text = n.nodeValue;
+            var next = text.replace(getRegex(pattern), replacement);
+            if (next === text) {
+                // 文本节点常带缩进/换行，锚定正则要作用在 trim 后的核心文本上
+                var lead = text.match(/^\s*/)[0];
+                var trail = text.match(/\s*$/)[0];
+                var core = text.slice(lead.length, text.length - trail.length);
+                var newCore = core.replace(getRegex(pattern), replacement);
+                if (newCore !== core) next = lead + newCore + trail;
+            }
+            if (next !== text && setTextNode(n, next)) changed = true;
+        });
+        return changed;
+    }
+
     /** 按正则表达式匹配并替换文本（用于动态文本，如 "... and X more."、"Total: X (members: Y)"）。
-     *  @param {Array<{selector:string, pattern:string, replacement:string}>} regexList
+     *  item.repeat=true 时不打永久标记，站点改写后还能再次接管（时间、计数等）。
+     *  @param {Array<{selector:string, pattern:string, replacement:string, repeat?:boolean}>} regexList
      *  @param {Document|Element} root
      *  @returns {Array} 未匹配的项目列表 */
     function translateByRegex(regexList, root) {
@@ -1389,13 +2570,11 @@
                     return;
                 }
                 els.forEach(function(el) {
-                    if (el.dataset.f95RegexTranslated) return;
+                    if (!item.repeat && el.dataset.f95RegexTranslated) return;
                     var oldText = el.textContent.trim();
-                    var newText = oldText.replace(getRegex(item.pattern), item.replacement);
-                    if (newText !== oldText) {
-                        setText(el, newText);
-                        el.dataset.f95RegexTranslated = '1';
-                        log('  ✓ [regex:' + item.selector + '] "' + oldText + '" → "' + newText + '"');
+                    if (replaceInTextNodes(el, item.pattern, item.replacement)) {
+                        if (!item.repeat) el.dataset.f95RegexTranslated = '1';
+                        log('  ✓ [regex:' + item.selector + '] "' + oldText + '" → "' + el.textContent.trim() + '"');
                     }
                 });
             } catch(e) {
@@ -1453,6 +2632,11 @@
     function translateF95Modules(root) {
         root = root || document;
         var mods = DICT.f95_modules || {};
+        var MONTH_ABBR = {
+            'Jan': '1', 'Feb': '2', 'Mar': '3', 'Apr': '4',
+            'May': '5', 'Jun': '6', 'Jul': '7', 'Aug': '8',
+            'Sep': '9', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+        };
 
         // 1) 新版导航 ID（thtrending 已更名为 f95trTrending）
         var navMap = mods.nav || {};
@@ -1524,6 +2708,37 @@
             var down = t.match(/^Down (\d+) \(was #(\d+)\)$/);
             if (up) setAttr(el, 'title', uiFmt('trending_rank_up', '上升 {n} 位（原第 {was} 名）', { n: up[1], was: up[2] }));
             else if (down) setAttr(el, 'title', uiFmt('trending_rank_down', '下降 {n} 位（原第 {was} 名）', { n: down[1], was: down[2] }));
+        });
+
+        // 8) f95on 在线会员卡片：数字与文案混排，逐个文本节点处理，保留 <b> 数字
+        qsa(root, '.f95on-label').forEach(function(el) { setText(el, '当前在线'); });
+        qsa(root, '.f95on-split').forEach(function(el) {
+            Array.prototype.forEach.call(el.childNodes, function(node) {
+                if (node.nodeType !== 3) return;
+                var t = node.nodeValue;
+                var next = t.replace(/\bmembers\s*·\s*/, ' 会员 · ').replace(/\bguests\b/, '游客');
+                if (next !== t) setTextNode(node, next);
+            });
+        });
+        qsa(root, '.f95on-trend-ends span').forEach(function(el) { setText(el, '现在'); });
+        qsa(root, '.f95on-facts > div').forEach(function(el) {
+            Array.prototype.forEach.call(el.childNodes, function(node) {
+                if (node.nodeType !== 3) return;
+                var t = node.nodeValue;
+                var next = t.replace(/^\s*Most at once:\s*/, '最高同时在线：')
+                             .replace(/^\s*Joined today:\s*/, '今日新增：')
+                             .replace(/^\s*on\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),\s*(\d{4})\s*$/, function(_, mon, day, year) {
+                                 return '（' + year + '年' + (MONTH_ABBR[mon] || mon) + '月' + parseInt(day, 10) + '日）';
+                             });
+                if (next !== t) setTextNode(node, next);
+            });
+        });
+
+        // 9) f95lu（最新更新 Beta）：更新时间标题 "Updated Nov 6, 2026 at 4:56 PM"
+        qsa(root, '.f95lu-when[title]').forEach(function(el) {
+            var t = el.getAttribute('title');
+            var m = t.match(/^Updated\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),\s*(\d{4})\s+at\s+(.+)$/);
+            if (m) setAttr(el, 'title', '更新于 ' + m[3] + '年' + (MONTH_ABBR[m[1]] || m[1]) + '月' + parseInt(m[2], 10) + '日 ' + m[4]);
         });
     }
 
@@ -1792,6 +3007,31 @@
             });
         }
 
+        // 新版资料卡 / 账户页把日期放在普通 <strong>/<div> 里（不是 <time>），单独处理
+        var _DATE_ONLY_RE = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),\s*(\d{4})$/;
+        function _zhDate(mon, day, year) {
+            return year + '年' + (_MONTH_ABBR[mon] || mon) + '月' + parseInt(day, 10) + '日';
+        }
+        function translateEnglishDates(root) {
+            root = root || document;
+            qsa(root, '.f95mbCard-stats strong, .f95on-facts strong').forEach(function(el) {
+                if (el.dataset.f95DateTranslated) return;
+                var m = el.textContent.trim().match(_DATE_ONLY_RE);
+                if (m) {
+                    setText(el, _zhDate(m[1], m[2], m[3]));
+                    el.dataset.f95DateTranslated = '1';
+                }
+            });
+            qsa(root, '[class^="f95ac"] .contentRow-minor, [class*=" f95ac"] .contentRow-minor').forEach(function(el) {
+                if (el.dataset.f95DateTranslated) return;
+                var m = el.textContent.trim().match(/^Joined\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{1,2}),\s*(\d{4})$/);
+                if (m) {
+                    setText(el, '加入于 ' + _zhDate(m[1], m[2], m[3]));
+                    el.dataset.f95DateTranslated = '1';
+                }
+            });
+        }
+
         // 尽早覆盖 XF.phrases
         if (typeof XF !== 'undefined' && XF.phrases) {
             applyTimePhrases();
@@ -1937,6 +3177,152 @@
             });
         }
 
+        // ==================== 通用 UI 文案 / 属性翻译 ====================
+        // 新版界面的菜单项、页签、按钮、提示很多没有稳定选择器。
+        // 只在明确的"界面容器"里按文本节点精确匹配，容器外的用户内容一律不碰。
+        var UI_TEXT_SCOPES = [
+            '.p-nav', '.p-sectionLinks', '.uix_sidebarNav', '.uix_sidebar', '.p-footer', '.uix_extendedFooter',
+            '.block-header', '.block-minorHeader', '.block-footer', '.block-row', '.blockMessage',
+            '.blockLink', '.memberOverViewBlock',
+            '.filterBar', '.menu', '.overlay', '.tooltip', '.tabs',
+            '.p-body-header', '.p-title-pageAction', '.p-description',
+            '.p-breadcrumbs', '.p-body-sideNavTrigger',
+            '.actionBar', '.message-attribution', '.message-footer',
+            '.quickFind-bar', '.quickFind-tabs', '.quickFind-panel',
+            '.fr-toolbar', '.fr-popup', '.fr-modal', '.fr-dropdown', '.fr-sr-only',
+            '.js-quickReply', '.js-replyNewMessageContainer',
+            // 模块根类名不固定（f95rv / f95rv-page / f95rv-card…），用类名前缀匹配
+            '[class^="f95on"]', '[class*=" f95on"]',
+            '[class^="f95tr"]', '[class*=" f95tr"]',
+            '[class^="f95rv"]', '[class*=" f95rv"]',
+            '[class^="f95wg"]', '[class*=" f95wg"]',
+            '[class^="f95st"]', '[class*=" f95st"]',
+            '[class^="f95lu"]', '[class*=" f95lu"]',
+            '[class^="f95tp"]', '[class*=" f95tp"]',
+            '[class^="f95ac"]', '[class*=" f95ac"]',
+            '[class^="f95pf"]', '[class*=" f95pf"]',
+            '[class^="f95sr"]', '[class*=" f95sr"]',
+            '[class^="f95mb"]', '[class*=" f95mb"]',
+            '[class^="f95tt"]', '[class*=" f95tt"]',
+            '.f95tp-unlockOverlay', '.f95tp-unlock',
+            '.structItem-cell--meta', '.structItem-statuses', '.node-statsMeta',
+            '.p-body-sidebar .block'
+        ].join(',');
+
+        // 这些容器里是用户内容（标题、正文、用户名、文件名），任何通用规则都必须绕开
+        var CONTENT_EXCLUDE = [
+            // 编辑器复用了 .bbWrapper（.fr-box），不能把整块编辑器当正文排除
+            '.bbWrapper:not(.fr-box)', '.message-body', '.message-content', '.js-messageBody',
+            '.username', '.userTitle', '.avatar', 'img', 'time',
+            'script', 'style', 'noscript', 'code', 'pre',
+            '.p-title-value', '.structItem-title', '.contentRow-snippet',
+            '.contentRow-title a', '.node-title', '.node-extra-title', '.node-description',
+            '.f95tr-tl', '.f95tr-wTitle', '.f95tr-moverChip', '.f95lu-name', '.f95lu-dev',
+            '.f95lu-tag', '.f95st-title', '.f95wg-title', '.f95rv-title',
+            '.f95pf-wallPost-text', '.f95tp-desc',
+            '.attachment', '.file-name', '.smilie', '.bbImage', '.bbImageWrapper',
+            '.quickFind-results', '.f95on-tip-name', '.f95ac-navMe-name'
+        ].join(',');
+
+        // 属性翻译不处理用户内容；但 .labelLink（"Add to filters"）和
+        // .structItem-cell--meta（反应分数提示）需要保留。
+        var ATTR_EXCLUDE = [
+            '.bbWrapper', '.message-body', '.message-content', '.js-messageBody',
+            '.username', '.userTitle', '.avatar', 'img', 'time',
+            '.p-title-value', '.structItem-title a:not(.labelLink)', '.contentRow-title a',
+            '.node-title', '.node-extra-title', '.f95tr-tl', '.f95lu-name', '.f95lu-dev',
+            '.f95tp-item-title', '.f95tp-desc', '.quickFind-title', '.quickFind-creator',
+            '.attachment', '.smilie', '.file-name', '.f95on-tip-name'
+        ].join(',');
+        var ATTR_NAMES = ['title', 'data-original-title', 'aria-label', 'placeholder', 'alt'];
+
+        /**
+         * 在一个界面容器内逐文本节点精确匹配词典。
+         * 用文本节点而不是元素，是为了保留 <b>/<span>/<a> 等结构。
+         */
+        function applyTextMapWithin(area, map, allowContent) {
+            var walker = document.createTreeWalker(area, NodeFilter.SHOW_TEXT, null, false);
+            var pending = [];
+            var node;
+            while ((node = walker.nextNode())) {
+                var parent = node.parentElement;
+                if (!parent) continue;
+                if (!allowContent && parent.closest && parent.closest(CONTENT_EXCLUDE)) continue;
+                var raw = node.nodeValue;
+                var text = raw.trim();
+                if (!text || text.charAt(0) === '_') continue;
+                if (Object.prototype.hasOwnProperty.call(map, text)) {
+                    pending.push([node, raw, text, map[text]]);
+                }
+            }
+            pending.forEach(function(item) {
+                // 用 split/join，避免译文里的 $& 被当作替换模式
+                setTextNode(item[0], item[1].split(item[2]).join(item[3]));
+            });
+        }
+
+        function translateScopedText(root) {
+            root = root || document;
+            var flat = DICT.xenforo_ui_text || {};
+            if (visibleKeys(flat).length) {
+                var areas = qsa(root, UI_TEXT_SCOPES);
+                // 去掉被其他容器包含的节点，避免同一子树被反复遍历。
+                // 按 DOM 深度排序后只需和"已保留的最外层容器"比较，避免 O(n²)。
+                function depthOf(el) {
+                    var d = 0;
+                    while (el) { d++; el = el.parentElement; }
+                    return d;
+                }
+                areas.sort(function(a, b) { return depthOf(a) - depthOf(b); });
+                var kept = [];
+                areas.forEach(function(a) {
+                    for (var i = 0; i < kept.length; i++) {
+                        if (kept[i].contains(a)) return;
+                    }
+                    kept.push(a);
+                });
+                kept.forEach(function(area) { applyTextMapWithin(area, flat); });
+            }
+            var scoped = DICT.xenforo_scoped_text || [];
+            scoped.forEach(function(cfg) {
+                if (!cfg || !cfg.selector || !cfg.map) return;
+                // 显式作用域允许进入通用规则排除的内容容器（如奖杯说明里的
+                // "Secret trophy: how to get it…"），但仍只做精确文本匹配。
+                qsa(root, cfg.selector).forEach(function(area) { applyTextMapWithin(area, cfg.map, true); });
+            });
+        }
+
+        function translateUiAttributes(root) {
+            root = root || document;
+            var map = DICT.xenforo_ui_attrs || {};
+            var keys = visibleKeys(map);
+            if (!keys.length) return;
+            qsa(root, '[title],[data-original-title],[aria-label],[placeholder],[alt]').forEach(function(el) {
+                if (el.closest && el.closest(ATTR_EXCLUDE)) return;
+                ATTR_NAMES.forEach(function(name) {
+                    var v = el.getAttribute(name);
+                    if (v && Object.prototype.hasOwnProperty.call(map, v)) {
+                        setAttr(el, name, map[v]);
+                    }
+                });
+            });
+        }
+
+        function translateAttrRegex(root) {
+            root = root || document;
+            var list = DICT.xenforo_attr_regex || [];
+            if (!list.length) return;
+            list.forEach(function(item) {
+                if (!item || !item.selector || !item.attr) return;
+                qsa(root, item.selector).forEach(function(el) {
+                    var v = el.getAttribute(item.attr);
+                    if (!v) return;
+                    var next = v.replace(getRegex(item.pattern), item.replacement);
+                    if (next !== v) setAttr(el, item.attr, next);
+                });
+            });
+        }
+
         function translateButtons(root) {
             root = root || document;
             var buttonDict = DICT.xenforo_buttons || {};
@@ -1962,8 +3348,9 @@
                 }
             });
 
-            // .tic--button 按钮（如 "Ignore forum"，文本直接在 <a> 内，无 .button-text 包装）
-            qsa(root, '.tic--button').forEach(function(btn) {
+            // tic 忽略按钮（如 "Ignore forum"，文本直接在 <a> 内，无 .button-text 包装）
+            // 新版类名是 .tic-button（旧版 .tic--button），两者都兼容。
+            qsa(root, '.tic--button, .tic-button').forEach(function(btn) {
                 if (btn.dataset.f95ButtonTranslated) return;
                 if (btn.querySelector('.button-text')) return; // 已有 .button-text 子元素，上面已处理
                 // 排除 structItem 内的 Ignore（由 translateStructItems 处理）
@@ -2017,6 +3404,8 @@
                 'a[data-shortcut="node-description"]',
                 '.uix_categoryTitle',
                 'a.subNodeLink',
+                // 动态流/资料页里的版块链接只翻译已知版块名，不会碰主题帖标题
+                'a[href^="/forums/"]',
                 '.p-breadcrumbs span[itemprop="name"]'
             ];
             // 帖子页的 .p-title-value 是用户内容（主题标题），绝不能按论坛名翻译
@@ -2569,8 +3958,17 @@
                 }
             });
 
+            // --- 通用 UI 文案（菜单、页签、按钮、模块卡片等） ---
+            if (touches(UI_TEXT_SCOPES)) translateScopedText(target);
+
+            // --- title / aria-label / placeholder / alt 属性 ---
+            if (touches('[title], [data-original-title], [aria-label], [placeholder], [alt]')) {
+                translateUiAttributes(target);
+                translateAttrRegex(target);
+            }
+
             // Label / 按钮 / Tooltip / 反应按钮共享同一组 chrome 守卫
-            if (touches('.label, .button-text, .tic--button, [data-original-title], [title], .reaction--1')) {
+            if (touches('.label, .button-text, .tic--button, .tic-button, [data-original-title], [title], .reaction--1')) {
                 // Label 标签翻译（Completed、Abandoned、Collection 等）
                 if (DEBUG) log('--- Label 标签翻译 (' + visibleKeys(DICT.labels).length + ' 条) ---');
                 var labelUnmatched = translateLabels(target, DICT.labels, '.label');
@@ -2705,6 +4103,11 @@
                 translateFooter(target);
             }
 
+            // --- 资料卡 / 账户页里的纯文本日期 ---
+            if (touches('.f95mbCard-stats, [class^="f95ac"] .contentRow-minor, [class*=" f95ac"] .contentRow-minor, .f95on-facts')) {
+                translateEnglishDates(target);
+            }
+
             if (DEBUG && unmatched.length > 0) {
                 log('  未匹配的选择器 (' + unmatched.length + '):');
                 unmatched.forEach(function(item) {
@@ -2758,7 +4161,8 @@
             '.tooltip--member', '.overlay', '.menu', '.message', '.bbWrapper',
             '.structItem--thread', '.f95wg-strip', '.f95rv-banner', '.f95tt',
             '.js-filterMenuBody', '.notice', '.p-description', '.reaction',
-            '.resource-tile', '#latest-page_options-panel'
+            '.quickFind-panel', '.f95lu', '.f95tp-unlockOverlay', '.f95tp-unlock',
+            '.fr-popup', '.fr-modal', '.resource-tile', '#latest-page_options-panel'
         ];
 
         function expandRoot(n) {
@@ -2807,11 +4211,35 @@
             // 因此不会再次触发。
             observer = new MutationObserver(function(records) {
                 var added = false;
+                var timeDirty = false;
                 for (var i = 0; i < records.length; i++) {
                     var rec = records[i];
+                    if (rec.type === 'characterData') {
+                        // XenForo 的 u-dt 初始化/定时器会在我们翻译之后把时间文本改回英文。
+                        var tp = rec.target.parentElement;
+                        if (tp && tp.matches && tp.matches('time.u-dt')) timeDirty = true;
+                        // 站点 JS 会在原地改写 UI 文案（评分建议、字符计数、提示语）。
+                        // 只对界面容器内的改动重跑，帖子正文不处理。
+                        if (tp && tp.closest && tp.closest(UI_TEXT_SCOPES) &&
+                            !tp.closest('.bbWrapper:not(.fr-box), .message-body, .message-content')) {
+                            pendingRoots.push(expandRoot(tp));
+                            added = true;
+                        }
+                        continue;
+                    }
                     if (rec.type !== 'childList') continue;
                     for (var j = 0; j < rec.addedNodes.length; j++) {
                         var n = rec.addedNodes[j];
+                        // 站点常用 textContent = "..." 改写文案，此时新增的是文本节点
+                        if (n.nodeType === 3) {
+                            var tParent = n.parentElement;
+                            if (tParent && tParent.closest && tParent.closest(UI_TEXT_SCOPES) &&
+                                !tParent.closest('.bbWrapper:not(.fr-box), .message-body, .message-content')) {
+                                pendingRoots.push(expandRoot(tParent));
+                                added = true;
+                            }
+                            continue;
+                        }
                         if (n.nodeType !== 1 || IGNORE_ADDED_TAGS.test(n.tagName)) continue;
                         if (n === document.body || n === document.documentElement) {
                             pendingFull = true;
@@ -2821,15 +4249,29 @@
                         added = true;
                     }
                 }
+                if (timeDirty) {
+                    refreshTimeElements(document);
+                    translateJoinedDates(document);
+                }
                 if (!added) return;
                 if (flushTimer) clearTimeout(flushTimer);
                 flushTimer = setTimeout(flushPending, 150);
             });
 
             if (document.body) {
-                observer.observe(document.body, { childList: true, subtree: true});
+                observer.observe(document.body, { childList: true, subtree: true, characterData: true });
                 log('  MutationObserver 已启动（增量根节点模式）');
             }
+
+            // XF 的 u-dt 往往在我们的首轮翻译之后才初始化，把时间改回英文。
+            // 首轮后补几次，避免用户看到长达 30 秒的英文时间。
+            [1200, 4000, 10000].forEach(function(ms) {
+                setTimeout(function() {
+                    if (document.visibilityState !== 'visible') return;
+                    refreshTimeElements(document);
+                    translateJoinedDates(document);
+                }, ms);
+            });
 
             // 定时刷新：XenForo 每 ~60s 会覆盖时间文本为英文，定时抢回。
             // 页面不可见时跳过，避免后台标签页持续占用 CPU。

@@ -206,7 +206,7 @@ function validateDict() {
         'sam_placeholders', 'sam_accordion_match', 'sam_toggle_match',
         'sam_tags', 'sam_tooltips', 'sam_settings', 'sam_slider_map',
         'sam_result_text', 'reaction_texts', 'ui_strings',
-        'xenforo_filter_optgroups'
+        'xenforo_filter_optgroups', 'xenforo_ui_text', 'xenforo_ui_attrs'
     ].forEach((name) => checkStringMap(name, dict[name]));
 
     [
@@ -241,6 +241,43 @@ function validateDict() {
                 if (typeof item.pattern === 'string') {
                     try { new RegExp(item.pattern); }
                     catch (e) { fail(`xenforo_regex[${i}].pattern: 正则无效 — ${e.message}`); }
+                }
+            });
+        }
+    }
+
+    if (dict.xenforo_attr_regex !== undefined) {
+        if (!Array.isArray(dict.xenforo_attr_regex)) {
+            fail('xenforo_attr_regex: 应为数组');
+        } else {
+            dict.xenforo_attr_regex.forEach((item, i) => {
+                if (!isPlainObject(item)) { fail(`xenforo_attr_regex[${i}]: 应为对象`); return; }
+                ['selector', 'attr', 'pattern', 'replacement'].forEach((key) => {
+                    if (typeof item[key] !== 'string' || !item[key]) {
+                        fail(`xenforo_attr_regex[${i}].${key}: 应为非空字符串`);
+                    }
+                });
+                if (typeof item.pattern === 'string') {
+                    try { new RegExp(item.pattern); }
+                    catch (e) { fail(`xenforo_attr_regex[${i}].pattern: 正则无效 — ${e.message}`); }
+                }
+            });
+        }
+    }
+
+    if (dict.xenforo_scoped_text !== undefined) {
+        if (!Array.isArray(dict.xenforo_scoped_text)) {
+            fail('xenforo_scoped_text: 应为数组');
+        } else {
+            dict.xenforo_scoped_text.forEach((item, i) => {
+                if (!isPlainObject(item)) { fail(`xenforo_scoped_text[${i}]: 应为对象`); return; }
+                if (typeof item.selector !== 'string' || !item.selector) {
+                    fail(`xenforo_scoped_text[${i}].selector: 应为非空字符串`);
+                }
+                if (!isPlainObject(item.map)) {
+                    fail(`xenforo_scoped_text[${i}].map: 应为对象`);
+                } else {
+                    checkStringMap(`xenforo_scoped_text[${i}].map`, item.map, true);
                 }
             });
         }
