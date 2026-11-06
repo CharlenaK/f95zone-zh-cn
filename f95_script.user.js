@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         F95zone 汉化
 // @namespace    https://github.com/f95zone-zh-cn
-// @version      0.3.19
+// @version      0.3.20
 // @description  F95zone 定向翻译脚本 — 双引擎架构：XenForo SSR 增量选择器定位 + SAM DOM 增量翻译
 // @author       f95zone-zh-cn
 // @match        *://f95zone.to/*
@@ -267,19 +267,38 @@
         return map;
     }
 
-    // lookupTag 的小写查找表按 samTags/labels 对象身份缓存
+    // lookupTag 的小写查找表按 samTags/labels/tags 对象身份缓存
     var _tagLookupCache = new WeakMap();
-    function getTagLookup(samTags, labelsDict) {
+
+    /** 标签名归一化：大小写、连字符/下划线/斜杠、连续空白都不应影响匹配。
+     *  站点在不同位置会把 "text based" 写成 "Text-based"、"Futa/Trans" 等。 */
+    function normalizeTagKey(text) {
+        return String(text || '')
+            .toLowerCase()
+            .replace(/[‐-―−\-]/g, ' ')
+            .replace(/[_/]+/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function getTagLookup(samTags, labelsDict, tagsDict) {
         if (!samTags || typeof samTags !== 'object') return null;
         var entry = _tagLookupCache.get(samTags);
-        if (entry && entry.labels === labelsDict) return entry.map;
+        if (entry && entry.labels === labelsDict && entry.tags === tagsDict) return entry.map;
 
         var map = new Map();
-        visibleKeys(labelsDict).forEach(function(k) { map.set(k.toLowerCase(), labelsDict[k]); });
-        // sam_tags 优先（与旧实现的精确匹配顺序一致）
-        visibleKeys(samTags).forEach(function(k) { map.set(k.toLowerCase(), samTags[k]); });
+        function add(key, value) {
+            if (!key || value == null) return;
+            map.set(key.trim().toLowerCase(), value);
+            var normalized = normalizeTagKey(key);
+            if (normalized) map.set(normalized, value);
+        }
+        // 优先级：通用标签 < labels < sam_tags（保持旧实现中 sam_tags 覆盖 labels 的行为）
+        visibleKeys(tagsDict).forEach(function(k) { add(k, tagsDict[k]); });
+        visibleKeys(labelsDict).forEach(function(k) { add(k, labelsDict[k]); });
+        visibleKeys(samTags).forEach(function(k) { add(k, samTags[k]); });
 
-        _tagLookupCache.set(samTags, { labels: labelsDict, map: map });
+        _tagLookupCache.set(samTags, { labels: labelsDict, tags: tagsDict, map: map });
         return map;
     }
 
@@ -327,7 +346,7 @@
 
     // ==================== 内置默认字典 ====================
     var DEFAULT_DICT = {
-        "version": 49,
+        "version": 57,
         "xenforo": {
             ".notice[data-notice-id=\"90\"] .notice-content": "我们始终尽力确保F95上共享的文件是安全的。所有附件都会经过扫描，上传者会使用至少1款（通常2款）杀毒软件扫描每个上传文件，我们也有多道程序来防止恶意软件被分享。然而，不幸的是我们有时仍会有所遗漏。最近修改版的 <em>Pervert Action: Timelapse</em> 和 <em>Milfania</em> 含有恶意软件。<a href=\"https://f95zone.to/threads/recent-malware-infected-games.207437/\">点击此处了解更多</a>。",
             ".notice[data-notice-id=\"116\"] .notice-content": "上传者申请现已开放！如果您有兴趣成为团队成员，<a href=\"https://f95zone.to/threads/uploader-applications-are-open.230363/\">点击此处了解更多</a>。如果您之前被拒绝或因不活跃而被移除，请随时重新申请。",
@@ -559,7 +578,11 @@
             "mark all read": "全部标为已读",
             "save": "保存",
             "see all": "查看全部",
-            "see more": "查看更多"
+            "see more": "查看更多",
+            "all options": "所有选项",
+            "alert me about new games like this": "有这类新游戏时提醒我",
+            "add": "添加",
+            "ignore tag": "忽略标签"
         },
         "xenforo_regex": [
             {
@@ -1038,6 +1061,131 @@
                 "selector": ".p-title-value",
                 "pattern": "^Trending: Reviews$",
                 "replacement": "时下热门：评测"
+            },
+            {
+                "selector": ".f95sr-games-count",
+                "pattern": "^([\\d,]+) games?$",
+                "replacement": "$1 款游戏"
+            },
+            {
+                "selector": ".f95sr-card-score > span",
+                "pattern": "^([\\d,]+) reviews?$",
+                "replacement": "$1 条评测"
+            },
+            {
+                "selector": ".f95lu-heroKicker > span:not([class])",
+                "pattern": "^Games ([\\d,]+)$",
+                "replacement": "游戏 $1"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d+)m ago$",
+                "replacement": "$1 分钟前"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d+)h ago$",
+                "replacement": "$1 小时前"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d+)d ago$",
+                "replacement": "$1 天前"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Jan, (\\d{1,2}:\\d{2})$",
+                "replacement": "1月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Feb, (\\d{1,2}:\\d{2})$",
+                "replacement": "2月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Mar, (\\d{1,2}:\\d{2})$",
+                "replacement": "3月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Apr, (\\d{1,2}:\\d{2})$",
+                "replacement": "4月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) May, (\\d{1,2}:\\d{2})$",
+                "replacement": "5月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Jun, (\\d{1,2}:\\d{2})$",
+                "replacement": "6月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Jul, (\\d{1,2}:\\d{2})$",
+                "replacement": "7月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Aug, (\\d{1,2}:\\d{2})$",
+                "replacement": "8月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Sep, (\\d{1,2}:\\d{2})$",
+                "replacement": "9月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Oct, (\\d{1,2}:\\d{2})$",
+                "replacement": "10月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Nov, (\\d{1,2}:\\d{2})$",
+                "replacement": "11月$1日 $2"
+            },
+            {
+                "selector": "#f95luSettings .f95lu-segBtn",
+                "pattern": "^(\\d{1,2}) Dec, (\\d{1,2}:\\d{2})$",
+                "replacement": "12月$1日 $2"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Games I ignored \\((\\d+)\\)$",
+                "replacement": "我忽略的游戏（$1）"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Playing \\((\\d+)\\)$",
+                "replacement": "正在玩（$1）"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Plan to play \\((\\d+)\\)$",
+                "replacement": "计划游玩（$1）"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Finished \\((\\d+)\\)$",
+                "replacement": "已完成（$1）"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Dropped \\((\\d+)\\)$",
+                "replacement": "已放弃（$1）"
+            },
+            {
+                "selector": ".f95lu-showPills .menu-linkRow",
+                "pattern": "^Developers I follow \\((\\d+)\\)$",
+                "replacement": "我关注的开发者（$1）"
+            },
+            {
+                "selector": ".f95lu-pages .pageNavSimple-el--current",
+                "pattern": "^(\\d+) of ([\\d,]+)$",
+                "replacement": "第 $1 页，共 $2 页"
             }
         ],
         "xenforo_placeholders": {
@@ -1173,7 +1321,8 @@
             ".p-nav-list a[href=\"/search\"] span": "搜索",
             "#latest-page_options-panel h3": "选项",
             "#options-panel_item-btns-info": "<i class=\"fas fa-info-circle\"></i> 请确保保存你想要的选项",
-            "#options-panel_save-load .options-save": "<i class=\"fas fa-save\"></i>保存"
+            "#options-panel_save-load .options-save": "<i class=\"fas fa-save\"></i>保存",
+            ".p-footer-rssLink .u-srOnly": "RSS 订阅"
         },
         "sam_placeholders": {
             "#input-title_search": "搜索标题...",
@@ -1239,7 +1388,8 @@
             "Browser Notify": "浏览器通知",
             "Options": "选项",
             "Filters": "筛选",
-            "Settings": "设置"
+            "Settings": "设置",
+            "RSS": "RSS 订阅"
         },
         "sam_settings": {
             "_note": "Settings 面板翻译。用于 translateByTextMatch 对 .options-panel_item-title 和按钮文本进行匹配。",
@@ -2033,7 +2183,62 @@
             "Post reply": "发布回复",
             "Attach files": "附加文件",
             "Undo": "撤销",
-            "Redo": "重做"
+            "Redo": "重做",
+            "Order": "排序",
+            "Last updated": "最近更新",
+            "Updated, newest first": "按更新时间，最新优先",
+            "New games (thread created)": "新游戏（按主题创建时间）",
+            "Rating (average)": "评分（平均）",
+            "Rating (weighted)": "评分（加权）",
+            "Number of reviews": "评测数量",
+            "Views": "浏览量",
+            "Popular this week": "本周热门",
+            "Random": "随机",
+            "Title A–Z": "标题 A–Z",
+            "Beta": "测试版",
+            "In the last 24 hours": "过去 24 小时",
+            "In the last 3 days": "过去 3 天",
+            "In the last 7 days": "过去 7 天",
+            "In the last 30 days": "过去 30 天",
+            "In the last 90 days": "过去 90 天",
+            "In the last year": "过去一年",
+            "In the last 2 years": "过去 2 年",
+            "In the last 3 years": "过去 3 年",
+            "In the last 5 years": "过去 5 年",
+            "Custom dates…": "自定义日期…",
+            "Not updated": "未更新",
+            "Title and developer": "标题与开发者",
+            "Developer only": "仅开发者",
+            "Game details (OS, language, censorship)": "游戏详情（系统、语言、审查）",
+            "Any rating": "不限评分",
+            "3+ stars": "3 星以上",
+            "3.5+ stars": "3.5 星以上",
+            "4+ stars": "4 星以上",
+            "4.5+ stars": "4.5 星以上",
+            "Average": "平均分",
+            "Weighted": "加权分",
+            "In the last day": "过去 1 天",
+            "Not watched": "未关注",
+            "Seen": "已看过",
+            "Select games": "选择游戏",
+            "Manage followed developers": "管理关注的开发者",
+            "My saved filters": "我保存的筛选",
+            "Unwatch": "取消关注",
+            "Bookmark": "收藏",
+            "Playing": "正在玩",
+            "Plan to play": "计划游玩",
+            "Finished": "已完成",
+            "Dropped": "已放弃",
+            "Remove from the list": "从列表中移除",
+            "Cancel": "取消",
+            "You don't ignore any tags. Ignore a tag from its tag page on the forum.": "你还没有忽略任何标签。可以在论坛的标签页中忽略标签。",
+            "Advanced…": "高级…",
+            "Show all…": "显示全部…",
+            "Install the app": "安装应用",
+            "Install": "安装",
+            "Next": "下一页",
+            "Last": "末页",
+            "Note": "说明"
         },
         "xenforo_ui_attrs": {
             "_note": "通用属性翻译：仅对 title / data-original-title / aria-label / placeholder / alt 做精确匹配，用户内容容器除外。",
@@ -2117,7 +2322,31 @@
             "Angry": "生气",
             "Wow": "惊讶",
             "Sad": "难过",
-            "Love": "喜爱"
+            "Love": "喜爱",
+            "Settings": "设置",
+            "Find a tag": "查找标签",
+            "Which tags": "标签类型",
+            "Show": "显示",
+            "Categories": "分类",
+            "Type a tag…": "输入标签…",
+            "Add a tag…": "添加标签…",
+            "Type a tag: sand, prot, rpg…": "输入标签：sand、prot、rpg…",
+            "Only games with this tag": "仅显示带有此标签的游戏",
+            "Leave out games with this tag": "排除带有此标签的游戏",
+            "Remove this filter": "移除此筛选",
+            "Increase": "增加",
+            "Decrease": "减少",
+            "Search titles and developers…": "搜索标题和开发者…",
+            "Ignore tag": "忽略标签",
+            "games you ignored are hidden": "已忽略的游戏会被隐藏",
+            "First posted in the last 7 days": "最近 7 天内首次发布",
+            "Likes": "点赞",
+            "Updated": "更新时间",
+            "Updated or not updated in that time": "该时间段内是否更新",
+            "Search in": "搜索范围",
+            "At least": "至少",
+            "The same list as \"Ignore tag\" on the forum. No limit.": "与论坛“忽略标签”相同的列表，无数量限制。",
+            "Even when a tag or filter would hide them.": "即使标签或筛选本会隐藏它们。"
         },
         "xenforo_attr_regex": [
             {
@@ -2173,6 +2402,54 @@
                 "attr": "title",
                 "pattern": "^Updated (.+)$",
                 "replacement": "更新于 $1"
+            },
+            {
+                "selector": "a.tagCloud-tag",
+                "attr": "title",
+                "pattern": "^Used ([\\d,]+) times?$",
+                "replacement": "已使用 $1 次"
+            },
+            {
+                "selector": ".f95lu-meta span[title]",
+                "attr": "title",
+                "pattern": "^Views: ([\\d,]+)$",
+                "replacement": "浏览：$1"
+            },
+            {
+                "selector": ".f95lu-metaRating",
+                "attr": "title",
+                "pattern": "^Rating, all versions \\((\\d+)\\)$",
+                "replacement": "评分，全部版本（$1）"
+            },
+            {
+                "selector": ".f95lu-metaRating",
+                "attr": "title",
+                "pattern": "^Rating, all versions$",
+                "replacement": "评分，全部版本"
+            },
+            {
+                "selector": ".f95lu-metaRating",
+                "attr": "title",
+                "pattern": "^Rating, all versions \\((\\d+)\\) · this version ([\\d.]+)$",
+                "replacement": "评分，全部版本（$1） · 当前版本 $2"
+            },
+            {
+                "selector": ".f95lu-metaRating",
+                "attr": "title",
+                "pattern": "^Rating, all versions · this version ([\\d.]+)$",
+                "replacement": "评分，全部版本 · 当前版本 $1"
+            },
+            {
+                "selector": ".f95lu-check",
+                "attr": "title",
+                "pattern": "^Versions (.+)\\.$",
+                "replacement": "版本 $1"
+            },
+            {
+                "selector": ".f95lu-check",
+                "attr": "title",
+                "pattern": "^版本 (.+?) and (.+)$",
+                "replacement": "版本 $1 和 $2"
             }
         ],
         "xenforo_scoped_text": [
@@ -2182,8 +2459,209 @@
                 "map": {
                     "Secret trophy: how to get it shows once you have it.": "隐藏奖杯：获得后才会显示获取条件。"
                 }
+            },
+            {
+                "_note": "Latest Updates 设置面板（含大量 On/Off/Play 等短词，限定作用域避免误伤）",
+                "selector": "#f95luSettings",
+                "map": {
+                    "Saved to your account as you click, on every device.": "点击即保存到你的账户，并在所有设备上同步。",
+                    "Look": "外观",
+                    "Layout": "布局",
+                    "Grid": "网格",
+                    "Large": "大图",
+                    "Columns": "列数",
+                    "Fit": "自适应",
+                    "Games per page": "每页游戏数",
+                    "On the cover": "显示在封面上",
+                    "By the title": "显示在标题旁",
+                    "Open games in": "打开游戏方式",
+                    "This tab": "当前标签页",
+                    "A new tab": "新标签页",
+                    "Games I ignored": "我忽略的游戏",
+                    "Hide": "隐藏",
+                    "Dim": "变暗",
+                    "Blur": "模糊",
+                    "Animated covers": "动态封面",
+                    "Play": "播放",
+                    "On hover": "悬停时",
+                    "Never": "从不",
+                    "Details on hover": "悬停显示详情",
+                    "At once": "立即",
+                    "After a moment": "稍后",
+                    "Off": "关闭",
+                    "Mark games new since my last visit": "标记上次访问后的新游戏",
+                    "On": "开启",
+                    "Screenshots on hover": "悬停显示截图",
+                    "Pop out on hover": "悬停放大",
+                    "Filters apply": "筛选应用时机",
+                    "On click": "点击时",
+                    "When I press Apply": "按“应用”时",
+                    "Remember my last filters": "记住上次的筛选",
+                    "Filters sidebar": "筛选侧栏",
+                    "Scrolls": "随页面滚动",
+                    "Stays on screen": "固定在屏幕上",
+                    "Highlight search words": "高亮搜索词",
+                    "All settings on one page": "在一页中显示所有设置",
+                    "Back to the defaults": "恢复默认"
+                }
             }
-        ]
+        ],
+        "tags": {
+            "_note": "F95 站点标签名；脚本会做大小写、连字符与斜杠归一化匹配。",
+            "2d game": "2D游戏",
+            "2dcg": "2D CG",
+            "3d game": "3D游戏",
+            "3dcg": "3D CG",
+            "adventure": "冒险",
+            "ahegao": "高潮脸",
+            "ai cg": "AI CG",
+            "anal sex": "肛交",
+            "animated": "动画演出",
+            "asset-addon": "（素材）附加组件",
+            "asset-ai-shoujo": "（素材）AI 少女",
+            "asset-animal": "（素材）动物",
+            "asset-animation": "（素材）动画",
+            "asset-audio": "（素材）音频",
+            "asset-bundle": "（素材）捆绑包",
+            "asset-character": "（素材）角色",
+            "asset-clothing": "（素材）服装",
+            "asset-daz-gen1": "（素材）DAZ Studio 初代模型",
+            "asset-daz-gen2": "（素材）DAZ Studio 2 代模型",
+            "asset-daz-gen3": "（素材）DAZ Studio 3 代模型",
+            "asset-daz-gen8": "（素材）DAZ Studio 8 代模型",
+            "asset-daz-gen81": "（素材）DAZ Studio 8.1 代模型",
+            "asset-daz-gen9": "（素材）DAZ Studio 9 代模型",
+            "asset-daz-m4": "（素材）DAZ Studio 第四代男性模型",
+            "asset-daz-v4": "（素材）DAZ Studio 第四代女性模型",
+            "asset-environment": "（素材）环境",
+            "asset-expression": "（素材）表情",
+            "asset-female": "（素材）女性",
+            "asset-hair": "（素材）头发",
+            "asset-hdri": "（素材）高动态范围图像（HDRI）",
+            "asset-honey-select": "（素材）甜心选择",
+            "asset-honey-select2": "（素材）甜心选择 2",
+            "asset-koikatu": "（素材）恋爱活动",
+            "asset-light": "（素材）打光",
+            "asset-male": "（素材）男性",
+            "asset-morph": "（素材）形变",
+            "asset-nonbinary": "（素材）非二元性别",
+            "asset-playhome": "（素材）甜心选择",
+            "asset-plugin": "（素材）插件",
+            "asset-pose": "（素材）姿势",
+            "asset-prop": "（素材）道具",
+            "asset-scene": "（素材）场景",
+            "asset-script": "（素材）脚本",
+            "asset-shader": "（素材）着色器",
+            "asset-texture": "（素材）纹理贴图",
+            "asset-utility": "（素材）小工具",
+            "asset-vehicle": "（素材）载具",
+            "bdsm": "BDSM",
+            "bestiality": "兽交",
+            "big ass": "大屁股",
+            "big tits": "巨乳",
+            "blackmail": "要挟",
+            "bukkake": "颜射",
+            "censored": "有码",
+            "character creation": "角色创建",
+            "cheating": "出轨",
+            "combat": "战斗",
+            "corruption": "堕落",
+            "cosplay": "Cosplay",
+            "creampie": "中出",
+            "dating sim": "约会模拟",
+            "dilf": "熟男",
+            "drugs": "药物",
+            "dystopian setting": "反乌托邦背景",
+            "exhibitionism": "露阴癖",
+            "fantasy": "奇幻",
+            "female domination": "女性支配",
+            "female protagonist": "主角为女性",
+            "footjob": "足交",
+            "furry": "福瑞",
+            "futa/trans": "扶他/跨性别",
+            "futa/trans protagonist": "主角为扶他/跨性别者",
+            "gay": "男同性恋",
+            "graphic violence": "露骨的血腥暴力场面",
+            "groping": "痴汉行为",
+            "group sex": "群交",
+            "handjob": "手交",
+            "harem": "后宫",
+            "horror": "恐怖",
+            "humiliation": "屈辱",
+            "humor": "搞笑",
+            "incest": "乱伦",
+            "internal view": "断面图",
+            "interracial": "跨种族",
+            "japanese game": "日本游戏",
+            "kinetic novel": "单线视觉小说",
+            "lactation": "母乳",
+            "lesbian": "女同性恋",
+            "loli": "萝莉",
+            "male domination": "男性支配",
+            "male protagonist": "主角为男性",
+            "management": "经营",
+            "masturbation": "自慰",
+            "milf": "熟女",
+            "mind control": "催眠",
+            "mobile game": "手机游戏",
+            "monster": "怪物",
+            "monster girl": "怪物娘",
+            "multiple endings": "多结局",
+            "multiple penetration": "多重插入",
+            "multiple protagonist": "多主角",
+            "necrophilia": "奸尸",
+            "netorare": "NTR",
+            "no sexual content": "无 H 内容",
+            "oral sex": "口交",
+            "paranormal": "超自然",
+            "parody": "同人二创",
+            "platformer": "平台游戏",
+            "point & click": "指向点击游戏",
+            "possession": "附身",
+            "pov": "第一人称视角",
+            "pregnancy": "怀孕",
+            "prostitution": "卖淫",
+            "puzzle": "谜题",
+            "rape": "强奸",
+            "real porn": "含有真人色情音视频",
+            "religion": "宗教要素",
+            "romance": "浪漫关系",
+            "rpg": "RPG 游戏",
+            "sandbox": "沙盒游戏",
+            "scat": "粪便",
+            "school setting": "学校背景",
+            "sci-fi": "科幻",
+            "sex toys": "性玩具",
+            "sexual harassment": "性骚扰",
+            "shooter": "射击游戏",
+            "shota": "正太",
+            "side-scroller": "横版卷轴游戏",
+            "simulator": "模拟器游戏",
+            "sissification": "雌化",
+            "slave": "奴隶",
+            "sleep sex": "睡奸",
+            "spanking": "打屁股",
+            "strategy": "策略游戏",
+            "stripping": "脱衣表演",
+            "superpowers": "超能力",
+            "swinging": "伴侣交换",
+            "teasing": "挑逗",
+            "tentacles": "触手",
+            "text based": "基于文本",
+            "titfuck": "乳交",
+            "trainer": "养成",
+            "transformation": "身体变化/精神变化",
+            "trap": "伪娘",
+            "turn based combat": "回合制战斗",
+            "twins": "双胞胎",
+            "urination": "圣水",
+            "vaginal sex": "阴道交",
+            "virgin": "处女",
+            "virtual reality": "虚拟现实技术",
+            "voiced": "带有配音",
+            "vore": "丸吞",
+            "voyeurism": "偷窥"
+        }
     };
 
     // ==================== 字典加载（缓存 → 内置 → CDN 三级回退） ====================
@@ -2612,17 +3090,18 @@
         return unmatched || [];
     }
 
-    /** 在 sam_tags 和 labels 中合并查找标签翻译（精确匹配 + 大小写不敏感回退）
-     *  小写查找表按字典对象身份缓存，避免每次调用都重建 Object.keys。 */
-    function lookupTag(text, samTags, labelsDict) {
+    /** 在 tags / labels / sam_tags 中合并查找标签翻译
+     *  （精确匹配 → 大小写/连字符不敏感回退；查找表按字典对象身份缓存） */
+    function lookupTag(text, samTags, labelsDict, tagsDict) {
         if (!text || !text.trim()) return null;
         var key = text.trim();
         // 精确匹配（hardenDict 后的字典没有原型链，直接下标是安全的）
         if (samTags && samTags[key] !== undefined) return samTags[key];
         if (labelsDict && labelsDict[key] !== undefined) return labelsDict[key];
-        // 大小写不敏感回退
-        var map = getTagLookup(samTags, labelsDict);
-        return map ? (map.get(key.toLowerCase()) || null) : null;
+        if (tagsDict && tagsDict[key] !== undefined) return tagsDict[key];
+        // 大小写 / 连字符 / 斜杠不敏感回退
+        var map = getTagLookup(samTags, labelsDict, tagsDict);
+        return map ? (map.get(key.toLowerCase()) || map.get(normalizeTagKey(key)) || null) : null;
     }
 
     /**
@@ -3060,6 +3539,7 @@
             root = root || document;
             var samTags = DICT.sam_tags || {};
             var labelsDict = DICT.labels || {};
+            var tagsDict = DICT.tags || {};
 
             function nextSpoiler(b) {
                 var node = b.nextSibling, guard = 0;
@@ -3097,7 +3577,7 @@
                     var trail = part.match(/\s*$/)[0];
                     var core = part.trim();
                     if (!core) return part;
-                    var zh = lookupTag(core, samTags, labelsDict);
+                    var zh = lookupTag(core, samTags, labelsDict, tagsDict);
                     if (zh) { changed = true; return lead + zh + trail; }
                     return part;
                 }).join('');
@@ -3189,6 +3669,7 @@
             '.p-breadcrumbs', '.p-body-sideNavTrigger',
             '.actionBar', '.message-attribution', '.message-footer',
             '.quickFind-bar', '.quickFind-tabs', '.quickFind-panel',
+            '.offCanvasMenu', '.sidePanel', '.uix_fabBar', '.u-scrollButtons',
             '.fr-toolbar', '.fr-popup', '.fr-modal', '.fr-dropdown', '.fr-sr-only',
             '.js-quickReply', '.js-replyNewMessageContainer',
             // 模块根类名不固定（f95rv / f95rv-page / f95rv-card…），用类名前缀匹配
@@ -3214,14 +3695,17 @@
             // 编辑器复用了 .bbWrapper（.fr-box），不能把整块编辑器当正文排除
             '.bbWrapper:not(.fr-box)', '.message-body', '.message-content', '.js-messageBody',
             '.username', '.userTitle', '.avatar', 'img', 'time',
+            '.p-navgroup-linkText', '.p-offCanvasAccountLink',
             'script', 'style', 'noscript', 'code', 'pre',
             '.p-title-value', '.structItem-title', '.contentRow-snippet',
             '.contentRow-title a', '.node-title', '.node-extra-title', '.node-description',
             '.f95tr-tl', '.f95tr-wTitle', '.f95tr-moverChip', '.f95lu-name', '.f95lu-dev',
-            '.f95lu-tag', '.f95st-title', '.f95wg-title', '.f95rv-title',
+            '.f95lu-tag', '.f95lu-touchDev', '.f95st-title', '.f95wg-title', '.f95rv-title',
             '.f95pf-wallPost-text', '.f95tp-desc',
             '.attachment', '.file-name', '.smilie', '.bbImage', '.bbImageWrapper',
-            '.quickFind-results', '.f95on-tip-name', '.f95ac-navMe-name'
+            '.quickFind-results', '.f95on-tip-name', '.f95ac-navMe-name',
+            // f95sr 搜索结果卡片：游戏标题、作者、版本号都是用户内容
+            '.f95sr-card-title', '.f95sr-card-meta', '.f95sr-card-snippet'
         ].join(',');
 
         // 属性翻译不处理用户内容；但 .labelLink（"Add to filters"）和
@@ -3231,10 +3715,12 @@
             '.username', '.userTitle', '.avatar', 'img', 'time',
             '.p-title-value', '.structItem-title a:not(.labelLink)', '.contentRow-title a',
             '.node-title', '.node-extra-title', '.f95tr-tl', '.f95lu-name', '.f95lu-dev',
-            '.f95tp-item-title', '.f95tp-desc', '.quickFind-title', '.quickFind-creator',
+            '.f95lu-touchDev', '.f95tp-item-title', '.f95tp-desc', '.quickFind-title', '.quickFind-creator',
             '.attachment', '.smilie', '.file-name', '.f95on-tip-name'
         ].join(',');
-        var ATTR_NAMES = ['title', 'data-original-title', 'aria-label', 'placeholder', 'alt'];
+        // Tagify / 内容可编辑输入框的占位符放在 data-placeholder / aria-placeholder 上
+        var ATTR_NAMES = ['title', 'data-original-title', 'aria-label', 'placeholder', 'alt',
+            'data-placeholder', 'aria-placeholder'];
 
         /**
          * 在一个界面容器内逐文本节点精确匹配词典。
@@ -3297,7 +3783,7 @@
             var map = DICT.xenforo_ui_attrs || {};
             var keys = visibleKeys(map);
             if (!keys.length) return;
-            qsa(root, '[title],[data-original-title],[aria-label],[placeholder],[alt]').forEach(function(el) {
+            qsa(root, '[title],[data-original-title],[aria-label],[placeholder],[alt],[data-placeholder],[aria-placeholder]').forEach(function(el) {
                 if (el.closest && el.closest(ATTR_EXCLUDE)) return;
                 ATTR_NAMES.forEach(function(name) {
                     var v = el.getAttribute(name);
@@ -3323,6 +3809,83 @@
             });
         }
 
+        // ==================== 标签（tag）翻译 ====================
+        // 只命中明确的标签 UI 元素，绝不扫描帖子正文/标题，避免把正文里
+        // 顺带提到的 "big tits" 之类文字也改掉。
+        var TAG_ELEMENT_SELECTOR = [
+            '.tagItem', '.tagCloud-tag', '.f95lu-tag', '.f95sr-tagChip',
+            '.f95sr-suggest-name', '.f95sr-tagMatches a strong',
+            '.f95sr-tagList a > span:first-child',
+            '.tagify__tag-text', '.tagify__dropdown__item',
+            '.selectize-dropdown-content .option .tag-name',
+            '.selectize-control [data-tag]'
+        ].join(',');
+
+        var TAG_SCOPE = TAG_ELEMENT_SELECTOR + ', .f95lu-tag--more[title], .f95sr-suggest-in, .f95sr-suggest-out';
+
+        function translateTagElements(root) {
+            root = root || document;
+            var samTags = DICT.sam_tags || {};
+            var labelsDict = DICT.labels || {};
+            var tagsDict = DICT.tags || {};
+            if (!visibleKeys(tagsDict).length && !visibleKeys(samTags).length) return;
+
+            function applyTag(el, target, text) {
+                if (!el || !text || text.length > 160) return false;
+                var zh = lookupTag(text, samTags, labelsDict, tagsDict);
+                if (!zh || zh === text) return false;
+                return setText(target || el, zh);
+            }
+
+            qsa(root, TAG_ELEMENT_SELECTOR).forEach(function(el) {
+                if (el.classList && el.classList.contains('f95lu-tag--more')) return;
+                // Tagify 下拉项可能带 <strong> 高亮匹配片段，整段替换
+                if (el.classList && el.classList.contains('tagify__dropdown__item')) {
+                    applyTag(el, el, el.textContent.trim());
+                    return;
+                }
+                // tagItem 在搜索页可能用 <em class="textHighlight"> 包住匹配部分
+                var target = el.querySelector && el.querySelector('.textHighlight');
+                if (!target) target = el;
+                applyTag(el, target, target.textContent.trim());
+            });
+
+            // f95lu 卡片 "+N" 的 title 保存着逗号分隔的完整标签列表
+            qsa(root, '.f95lu-tag--more[title]').forEach(function(el) {
+                var title = el.getAttribute('title');
+                if (!title) return;
+                var changed = false;
+                var out = title.split(/\s*,\s*/).map(function(part) {
+                    var zh = lookupTag(part, samTags, labelsDict, tagsDict);
+                    if (zh && zh !== part) { changed = true; return zh; }
+                    return part;
+                });
+                if (changed) setAttr(el, 'title', out.join(', '));
+            });
+
+            // 标签详情页的大标题是标签名（/tags/2dcg/），不是用户内容
+            if (location.pathname.indexOf('/tags/') === 0 && location.pathname !== '/tags/') {
+                qsa(root, '.p-title-value').forEach(function(el) {
+                    var text = el.textContent.trim();
+                    var zh = lookupTag(text, samTags, labelsDict, tagsDict);
+                    if (zh && zh !== text) setText(el, zh);
+                });
+            }
+
+            // 搜索页标签建议上的 "With X" / "Without X" 无障碍提示
+            qsa(root, '.f95sr-suggest-in, .f95sr-suggest-out').forEach(function(el) {
+                var isOut = el.classList && el.classList.contains('f95sr-suggest-out');
+                var re = isOut ? /^Without\s+(.+)$/i : /^With\s+(.+)$/i;
+                var value = el.getAttribute('aria-label');
+                if (!value) return;
+                var m = value.match(re);
+                if (!m) return;
+                var zh = lookupTag(m[1], samTags, labelsDict, tagsDict) || m[1];
+                // title 是固定文案，由 xenforo_ui_attrs 处理
+                setAttr(el, 'aria-label', (isOut ? uiText('tag_without_prefix', '排除 ') : uiText('tag_with_prefix', '包含 ')) + zh);
+            });
+        }
+
         function translateButtons(root) {
             root = root || document;
             var buttonDict = DICT.xenforo_buttons || {};
@@ -3342,7 +3905,9 @@
                 if (!text) return;
                 var translation = normalizedMap[normalize(text)];
                 if (translation) {
-                    setText(textEl, translation);
+                    // 带图标的按钮（如 "Alert me about new games like this"）保留图标
+                    if (textEl.querySelector && textEl.querySelector('i, svg')) setTextKeepIcon(textEl, translation);
+                    else setText(textEl, translation);
                     btn.dataset.f95ButtonTranslated = '1';
                     log('  [按钮] "' + text + '" → "' + translation + '"');
                 }
@@ -3962,10 +4527,13 @@
             if (touches(UI_TEXT_SCOPES)) translateScopedText(target);
 
             // --- title / aria-label / placeholder / alt 属性 ---
-            if (touches('[title], [data-original-title], [aria-label], [placeholder], [alt]')) {
+            if (touches('[title], [data-original-title], [aria-label], [placeholder], [alt], [data-placeholder], [aria-placeholder]')) {
                 translateUiAttributes(target);
                 translateAttrRegex(target);
             }
+
+            // --- 标签（tag）文案 ---
+            if (touches(TAG_SCOPE)) translateTagElements(target);
 
             // Label / 按钮 / Tooltip / 反应按钮共享同一组 chrome 守卫
             if (touches('.label, .button-text, .tic--button, .tic-button, [data-original-title], [title], .reaction--1')) {
@@ -4270,6 +4838,12 @@
                     if (document.visibilityState !== 'visible') return;
                     refreshTimeElements(document);
                     translateJoinedDates(document);
+                    // 站点在页面加载后才初始化 Tagify/Token 输入框，并在元素创建后
+                    // 补写 data-placeholder / aria-placeholder；属性变更不触发
+                    // childList 观察器，这里补跑一轮属性与标签翻译。
+                    translateUiAttributes(document);
+                    translateAttrRegex(document);
+                    translateTagElements(document);
                 }, ms);
             });
 
@@ -4401,14 +4975,18 @@
             var tooltipDict = DICT.sam_tooltips || {};
             var keys = visibleKeys(tooltipDict);
             if (!keys.length) return;
-            qsa(root, '[data-tooltip]').forEach(function(el) {
+            qsa(root, '[data-tooltip], [title]').forEach(function(el) {
                 if (el.dataset.f95SamTooltipTranslated) return;
-                var tip = el.getAttribute('data-tooltip');
-                if (tip && tooltipDict[tip]) {
-                    el.setAttribute('data-tooltip', tooltipDict[tip]);
-                    el.dataset.f95SamTooltipTranslated = '1';
-                    log('  [SAM Tooltip] "' + tip + '" → "' + tooltipDict[tip] + '"');
-                }
+                var changed = false;
+                // data-tooltip 是 SAM 自己的提示；title 用于页脚的 RSS 等标准链接
+                ['data-tooltip', 'title'].forEach(function(attr) {
+                    var tip = el.getAttribute(attr);
+                    if (tip && tooltipDict[tip]) {
+                        if (setAttr(el, attr, tooltipDict[tip])) changed = true;
+                        log('  [SAM Tooltip] "' + tip + '" → "' + tooltipDict[tip] + '"');
+                    }
+                });
+                if (changed) el.dataset.f95SamTooltipTranslated = '1';
             });
         }
 
@@ -4426,12 +5004,13 @@
             root = root || document;
             var samTags = DICT.sam_tags || {};
             var labelsDict = DICT.labels || {};
+            var tagsDict = DICT.tags || {};
             var tagSpans = qsa(root, '.resource-tile_tags span');
             if (!tagSpans.length) return;
             tagSpans.forEach(function(span) {
                 if (span.dataset.f95HoverTranslated) return;
                 var text = span.textContent.trim();
-                var result = lookupTag(text, samTags, labelsDict);
+                var result = lookupTag(text, samTags, labelsDict, tagsDict);
                 if (result) {
                     if (setText(span, result)) {
                         log('  [Hover标签] "' + text + '" → "' + result + '"');
@@ -4446,10 +5025,11 @@
             root = root || document;
             var samTags = DICT.sam_tags || {};
             var labelsDict = DICT.labels || {};
+            var tagsDict = DICT.tags || {};
             qsa(root, '.resource-tile_label-wrap [class^="pre-"]').forEach(function(el) {
                 if (el.dataset.f95SamPrefix) return;
                 var text = el.textContent.trim();
-                var result = lookupTag(text, samTags, labelsDict);
+                var result = lookupTag(text, samTags, labelsDict, tagsDict);
                 if (result) {
                     if (setText(el, result)) log('  [SAM前缀] "' + text + '" → "' + result + '"');
                     el.dataset.f95SamPrefix = '1';
@@ -4457,17 +5037,18 @@
             });
         }
 
-        /** SAM 标签 chip：已选标签是 <span data-tag="id">，下拉项是 .option[data-value="id"] */
+        /** SAM 标签 chip：已选标签是 <span data-tag="id">，下拉项是
+         *  .option > .tag-name（旁边还有 .tag-count，不能整项替换） */
         function translateSamTagChips(root) {
             root = root || document;
             var samTags = DICT.sam_tags || {};
             var labelsDict = DICT.labels || {};
-            qsa(root, '[data-tag], .selectize-dropdown-content .option').forEach(function(el) {
+            var tagsDict = DICT.tags || {};
+            qsa(root, '[data-tag], .selectize-dropdown-content .option .tag-name').forEach(function(el) {
                 if (el.dataset.f95SamTagChip) return;
-                if (el.children.length > 0) return;
                 var text = el.textContent.trim();
                 if (!text) return;
-                var result = lookupTag(text, samTags, labelsDict);
+                var result = lookupTag(text, samTags, labelsDict, tagsDict);
                 if (result) {
                     if (setText(el, result)) log('  [SAM标签] "' + text + '" → "' + result + '"');
                     el.dataset.f95SamTagChip = '1';

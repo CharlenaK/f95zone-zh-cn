@@ -206,7 +206,7 @@ function validateDict() {
         'sam_placeholders', 'sam_accordion_match', 'sam_toggle_match',
         'sam_tags', 'sam_tooltips', 'sam_settings', 'sam_slider_map',
         'sam_result_text', 'reaction_texts', 'ui_strings',
-        'xenforo_filter_optgroups', 'xenforo_ui_text', 'xenforo_ui_attrs'
+        'xenforo_filter_optgroups', 'xenforo_ui_text', 'xenforo_ui_attrs', 'tags'
     ].forEach((name) => checkStringMap(name, dict[name]));
 
     [
