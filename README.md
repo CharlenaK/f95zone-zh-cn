@@ -48,11 +48,13 @@
 
 脚本内置三级字典加载机制：
 
-1. **CDN 热更新**：每次启动时异步从 [jsDelivr CDN](https://cdn.jsdelivr.net/gh/CharlenaK/f95zone-zh-cn@main/f95_dict.json) 拉取最新字典，版本号高于缓存时自动更新，下次加载即生效
+1. **CDN 热更新**：启动时异步从 [jsDelivr CDN](https://cdn.jsdelivr.net/gh/CharlenaK/f95zone-zh-cn@main/f95_dict.json) 拉取最新字典，**最多每 24 小时检查一次**（请求失败后 1 小时重试）。版本号高于缓存时整体替换本地字典，并立即对当前页面重跑翻译
 2. **本地缓存**：更新后的字典会写入 TamperMonkey 本地存储，后续优先使用缓存
 3. **内置兜底**：CDN 请求失败或超时（5s）时，回退使用脚本内置的默认字典，不影响正常使用
 
-如需要手动更新脚本本体，可在 TamperMonkey 管理面板中点击「检查更新」。
+> 字典采用白名单清洗：从 CDN 获取的 HTML 只保留 `p/strong/em/span/a` 等行内排版标签与 `color` 样式，`script/img/iframe`、事件属性及 `javascript:` 链接会被剔除。
+
+脚本头包含 `@updateURL` / `@downloadURL`，TamperMonkey 会按自身策略自动检查脚本更新，也可以在管理面板中手动点击「检查更新」。
 
 ## 项目结构
 
@@ -69,9 +71,24 @@
 ### 贡献方式
 
 1. Fork 本仓库
-2. 在 `f95_dict.json` 中按现有格式添加或修改翻译词条
-3. 同时更新 `f95_script.user.js` 中的 `DEFAULT_DICT` 对象，保持二者一致
-4. 提交 Pull Request
+2. 在 `f95_dict.json` 中按现有格式添加或修改翻译词条（这是唯一数据源）
+3. 运行 `node tools/sync-dict.mjs`：先做字典质量校验（重复键、类型、空值、危险 HTML/事件属性），再把字典同步进 `f95_script.user.js`
+4. 运行 `node tools/sync-dict.mjs --check` 确认一致
+5. 提交 Pull Request
+
+> 只检查不写入：`node tools/sync-dict.mjs --validate`
+> 修改字典内容时请同时提升 `version`，否则已安装用户不会收到热更新。
+
+### 字典覆盖率诊断
+
+安装脚本后，Tampermonkey 菜单中会出现 **「F95汉化：字典覆盖率诊断（当前页）」**。点击后会在控制台输出：
+
+- 当前模板（`thread_view` / `forum_list` / SAM 等）
+- `xenforo` / `sam_static` 每条选择器的命中数，以及失效列表
+- UI 区域内残留的英文文本（排除帖子正文）
+- 空闲 3 秒的 DOM 变更数（正常应接近 0）
+
+这是补充译文时定位"哪个选择器失效、哪里还残留英文"的主要工具。
 
 ---
 

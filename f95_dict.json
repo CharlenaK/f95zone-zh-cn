@@ -1,5 +1,5 @@
 {
-  "version": 46,
+  "version": 48,
   "xenforo": {
     ".notice[data-notice-id=\"90\"] .notice-content": "我们始终尽力确保F95上共享的文件是安全的。所有附件都会经过扫描，上传者会使用至少1款（通常2款）杀毒软件扫描每个上传文件，我们也有多道程序来防止恶意软件被分享。然而，不幸的是我们有时仍会有所遗漏。最近修改版的 <em>Pervert Action: Timelapse</em> 和 <em>Milfania</em> 含有恶意软件。<a href=\"https://f95zone.to/threads/recent-malware-infected-games.207437/\">点击此处了解更多</a>。",
     ".notice[data-notice-id=\"116\"] .notice-content": "上传者申请现已开放！如果您有兴趣成为团队成员，<a href=\"https://f95zone.to/threads/uploader-applications-are-open.230363/\">点击此处了解更多</a>。如果您之前被拒绝或因不活跃而被移除，请随时重新申请。",
@@ -8,8 +8,9 @@
     "[data-nav-id=\"forums\"] span": "论坛",
     "[data-nav-id=\"nfTickets\"] span": "工单",
     "[data-nav-id=\"LatestUpdates\"] span": "最近更新",
+    "[data-nav-id=\"f95trTrending\"] span": "时下热门",
+    "[data-nav-id=\"f95luPage\"] span": "最新更新（Beta）",
     "[data-nav-id=\"newPosts\"] span": "新帖",
-    "[data-nav-id=\"thtrending\"] span": "时下热门",
     "[data-nav-id=\"findThreads\"] span": "主题帖检索",
     "[data-nav-id=\"watched\"] span": "关注列表",
     "[data-nav-id=\"searchForums\"] span": "搜索论坛",
@@ -37,18 +38,6 @@
     ".block-minorHeader a[href=\"/online/\"]": "在线会员",
     ".block-minorHeader a[href=\"/whats-new/posts/?skip=1\"]": "最新帖子",
     ".block-minorHeader a[href=\"/whats-new/profile-posts/?skip=1\"]": "最新动态",
-    ".brmsTabHandler_0 span": "最新回复",
-    ".brmsTabHandler_1 span": "最新帖子",
-    ".brmsTabHandler_2 span": "最近更新",
-    ".brmsTabHandler_3 span": "最多浏览",
-    ".brmsTabHandler_4 span": "30天内最多浏览",
-    ".brmsTabHandler_5 span": "最多回复",
-    ".brmsTabHandler_6 span": "我的帖子",
-    ".brmsTabHandler_7 span": "6个月内最多浏览",
-    ".brmsTabHandler_8 span": "12个月内最多浏览",
-    ".brmsLayoutChange[data-layout=\"brmsTopTabs\"]": "顶部",
-    ".brmsLayoutChange[data-layout=\"brmsLeftTabs\"]": "左侧",
-    ".brmsLayoutChange[data-layout=\"brmsRightTabs\"]": "右侧",
     "[data-widget-definition=\"th_aboutUs\"] .block-minorHeader": "关于我们",
     "[data-widget-definition=\"th_navigation\"] .block-minorHeader": "快速导航",
     "[data-widget-definition=\"th_userNavigation\"] .block-minorHeader": "用户菜单",
@@ -60,7 +49,12 @@
     ".p-footer-linkList a[href=\"/help/privacy-policy/\"]": "隐私政策",
     ".p-footer-linkList a[href=\"/help/\"]": "帮助",
     ".actionBar-action--report": "举报",
-    ".reaction--1 .reaction-text": "点赞"
+    ".f95wg-strip-label": "版本",
+    ".f95tt-promote-title": "推广主题帖",
+    ".f95tt-promote-desc": "提升到“最新更新”的顶部。",
+    ".f95tt-none": "没有匹配的工具。",
+    ".f95tr-widgetHead a:not(.f95tr-seeAll)": "时下热门",
+    ".f95tr-seeAll": "查看全部"
   },
   "xenforo_time_phrases": {
     "_note": "覆盖 XF.phrases 时间格式化模板，使 XenForo 原生渲染中文相对时间。{count}/{minutes}/{date}/{time}/{day} 是 XenForo 的模板占位符，必须保留。",
@@ -198,18 +192,47 @@
     "filter": "筛选"
   },
   "xenforo_regex": [
-    { "selector": "a[href=\"/online/\"]", "pattern": "^\\.\\.\\. and (\\d+) more\\.$", "replacement": "... 以及另外 $1 人。" },
-    { "selector": ".block-footer-counter", "pattern": "^Total:\\s*([\\d,]+)\\s*\\(members:\\s*([\\d,]+),\\s*guests:\\s*([\\d,]+)\\)$", "replacement": "总计：$1（会员：$2，游客：$3）" },
-    { "selector": ".brmsNumberEntry", "pattern": "^(\\d+)\\s*Entries$", "replacement": "$1 条" },
-    { "selector": ".u-srOnly", "pattern": "^(.+) wrote on (.+)'s profile\\.$", "replacement": "$1 在 $2 的个人主页上留言。" },
-    { "selector": "a[href^=\"/account/dpp-update\"] .button-text", "pattern": "^Showing (\\d+) posts per page$", "replacement": "每页显示 $1 条帖子" },
-    { "selector": ".tabs--standalone .tabs-tab", "pattern": "^Discussion$", "replacement": "讨论" },
-    { "selector": ".tabs--standalone .tabs-tab", "pattern": "^Reviews \\((\\d+)\\)$", "replacement": "评论 ($1)" }
+    {
+      "selector": "a[href=\"/online/\"]",
+      "pattern": "^\\.\\.\\. and (\\d+) more\\.$",
+      "replacement": "... 以及另外 $1 人。"
+    },
+    {
+      "selector": ".block-footer-counter",
+      "pattern": "^Total:\\s*([\\d,]+)\\s*\\(members:\\s*([\\d,]+),\\s*guests:\\s*([\\d,]+)\\)$",
+      "replacement": "总计：$1（会员：$2，游客：$3）"
+    },
+    {
+      "selector": ".brmsNumberEntry",
+      "pattern": "^(\\d+)\\s*Entries$",
+      "replacement": "$1 条"
+    },
+    {
+      "selector": ".u-srOnly",
+      "pattern": "^(.+) wrote on (.+)'s profile\\.$",
+      "replacement": "$1 在 $2 的个人主页上留言。"
+    },
+    {
+      "selector": "a[href^=\"/account/dpp-update\"] .button-text",
+      "pattern": "^Showing (\\d+) posts per page$",
+      "replacement": "每页显示 $1 条帖子"
+    },
+    {
+      "selector": ".tabs--standalone .tabs-tab",
+      "pattern": "^Discussion$",
+      "replacement": "讨论"
+    },
+    {
+      "selector": ".tabs--standalone .tabs-tab",
+      "pattern": "^Reviews \\((\\d+)\\)$",
+      "replacement": "评论 ($1)"
+    }
   ],
   "xenforo_placeholders": {
     "textarea.js-editor[placeholder=\"Update your status…\"]": "更新你的状态…",
     "textarea.comment-input[placeholder=\"Write a comment…\"]": "写评论…",
-    "#quickSearchTitle": "快速搜索…"
+    "#quickSearchTitle": "快速搜索…",
+    ".f95tt-find-input": "查找工具…"
   },
   "xenforo_node_stats_dt": {
     "Threads": "条主题帖",
@@ -225,7 +248,8 @@
   "xenforo_thread_meta_dt": {
     "_note": "主题帖列表中 Replies / Views 统计标签翻译（.structItem-cell--meta dt）。",
     "Replies": "回复",
-    "Views": "查看"
+    "Views": "查看",
+    "Reviews": "评论"
   },
   "xenforo_thread_list_separators": {
     "_note": "论坛版块内主题帖列表分隔符翻译（Sticky threads / Normal threads）。匹配 .uix_threadListSeparator 的第一个文本节点，保留折叠按钮子元素。",
@@ -245,7 +269,11 @@
     "Top": "回到顶部",
     "Cancel": "取消",
     "Go to page": "跳转到页面",
-    "Like": "点赞"
+    "Like": "点赞",
+    "New in this list": "新进入榜单",
+    "Unlike": "取消点赞",
+    "Remove": "移除",
+    "Rate this game": "为该游戏评分"
   },
   "xenforo_dataList_headers": {
     "_note": "dataList 表格表头翻译（如 Quick Search 结果页面）。key 为 <th> 的 textContent 精确匹配值。",
@@ -301,8 +329,6 @@
     ".p-nav-list a[href=\"/sam/latest_alpha/\"] span": "下载",
     ".p-nav-list a[href=\"/\"] span": "论坛",
     ".p-nav-list a[href=\"/search\"] span": "搜索",
-    ".nav_prev span": "上一页",
-    ".nav_next span": "下一页",
     "#latest-page_options-panel h3": "选项",
     "#options-panel_item-btns-info": "<i class=\"fas fa-info-circle\"></i> 请确保保存你想要的选项",
     "#options-panel_save-load .options-save": "<i class=\"fas fa-save\"></i>保存"
@@ -406,6 +432,75 @@
   "sam_result_text": {
     "Results": "条结果"
   },
+  "reaction_texts": {
+    "like": "点赞",
+    "unlike": "取消点赞"
+  },
+  "f95_modules": {
+    "_note": "改版后新增 F95 模块的文本映射；选择器均限定在对应模块容器内，避免误伤内容区。",
+    "nav": {
+      "f95trTrending": "时下热门",
+      "f95luPage": "最新更新（Beta）"
+    },
+    "stats_tabs": {
+      "Latest Replies": "最新回复",
+      "Latest Threads": "最新主题",
+      "Latest Updates": "最新更新",
+      "Most Viewed Threads": "最多浏览主题",
+      "My Threads": "我的主题",
+      "Trending": "时下热门",
+      "Most Liked Threads": "最多点赞主题"
+    },
+    "thread_tools_groups": {
+      "Thread": "主题帖",
+      "Status": "状态",
+      "Reports and history": "举报与历史",
+      "Replies and reviews": "回复与评测",
+      "Other": "其他"
+    },
+    "thread_meta": {
+      "Thread starter": "楼主",
+      "Start date": "开始日期",
+      "Tags": "标签"
+    },
+    "trending": {
+      "New": "新"
+    }
+  },
+  "ui_strings": {
+    "_note": "脚本动态拼接/兜底的界面文案。{n}/{was}/{year}/{month}/{day}/{time} 为占位符。",
+    "find_tool": "查找工具…",
+    "promote_short": "推广…",
+    "alert_new_versions": "有新版本时提醒我",
+    "reviews_suffix": "条评测",
+    "stars_aria": "{n} 星",
+    "rating_out_of_5": "{n} 分（满分 5 分）",
+    "rate_this_game": "为该游戏评分",
+    "trending_new_in_list": "新进入榜单",
+    "trending_place_suffix": "位",
+    "trending_rank_up": "上升 {n} 位（原第 {was} 名）",
+    "trending_rank_down": "下降 {n} 位（原第 {was} 名）",
+    "footer_language": "英语（美国）",
+    "member_from_prefix": "来自于 ",
+    "prev_page": "上一页",
+    "next_page": "下一页",
+    "hover_delay_ms": "{n} 毫秒",
+    "items_suffix": "{n} 条",
+    "days_suffix": "{n} 天",
+    "results_suffix": "条结果",
+    "time_just_now": "刚刚",
+    "time_minutes_ago": "{n} 分钟前",
+    "time_hours_ago": "{n} 小时前",
+    "time_today_at": "今天 {time}",
+    "time_date": "{year}年{month}月{day}日 {time}",
+    "time_date_only": "{year}年{month}月{day}日"
+  },
+  "xenforo_filter_optgroups": {
+    "_note": "版块筛选菜单内 optgroup 分组名。",
+    "Other": "其他",
+    "Engine": "引擎",
+    "Status": "状态"
+  },
   "labels": {
     "_note": "引擎、状态、前缀等标签翻译。以 _ 开头的 key 不会被翻译引擎处理。",
     "Completed": "已完成",
@@ -431,7 +526,15 @@
     "Weighted Rating": "加权评分",
     "ADRIFT": "ADRIFT引擎",
     "Flash": "Flash引擎",
-    "SiteRip": "站点搬运"
+    "SiteRip": "站点搬运",
+    "Godot": "Godot引擎",
+    "Java": "Java引擎",
+    "WebGL": "WebGL引擎",
+    "Wolf RPG": "Wolf RPG引擎",
+    "Tads": "Tads引擎",
+    "RAGS": "RAGS引擎",
+    "QSP": "QSP引擎",
+    "HTML": "HTML引擎"
   },
   "xenforo_footer_links": {
     "Members": "会员",
@@ -468,7 +571,10 @@
     "Unfollow": "取消关注",
     "Ignore": "屏蔽",
     "Unignore": "取消屏蔽",
-    "Start conversation": "发起私信"
+    "Start conversation": "发起私信",
+    "Reactions": "获赞",
+    "View profile": "查看资料",
+    "Following": "正在关注"
   },
   "xenforo_member_tooltip_activity": {
     "_note": "Last seen 后面的活动状态翻译。匹配文本节点中以 key 开头的前缀并替换。",
