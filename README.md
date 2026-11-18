@@ -1,3 +1,8 @@
+> [!WARNING]
+> This script will no longer be maintained. Please go to [the introduction of this script](https://greasyfork.org/zh-CN/scripts/585857-f95zone-%E6%B1%89%E5%8C%96) for more information.
+>
+> 本脚本将不再得到更新与维护。请前往[脚本说明页面](https://greasyfork.org/zh-CN/scripts/585857-f95zone-%E6%B1%89%E5%8C%96)获取更多相关信息。
+
 # F95zone 汉化脚本
 
 [![TamperMonkey](https://img.shields.io/badge/TamperMonkey-v4.0+-brightgreen)](https://www.tampermonkey.net/)
